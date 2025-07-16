@@ -559,9 +559,7 @@ function generateMessage() {
     document.getElementById('outputText').textContent = message.trim();
     document.getElementById('lineShareBtn').href = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
 }
-            // 更新 LINE 分享連結
-            const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
-            document.getElementById('lineShareBtn').href = lineUrl;
+           
         }
 
         // 清空所有選擇
