@@ -171,6 +171,15 @@
             background: #00a844;
         }
 
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background: #c82333;
+        }
+
         .status-message {
             margin-top: 15px;
             padding: 10px;
@@ -277,16 +286,6 @@
             color: #333;
         }
 
-        .clear-btn {
-            background: #dc3545;
-            color: white;
-            margin-top: 20px;
-        }
-
-        .clear-btn:hover {
-            background: #c82333;
-        }
-
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -365,6 +364,7 @@
                 <div class="action-buttons">
                     <button class="action-btn copy-btn" onclick="copyText()">複製文字</button>
                     <a id="lineShareBtn" class="action-btn line-btn" href="#" target="_blank">分享到 LINE</a>
+                    <button class="action-btn clear-btn" onclick="clearAll()">清空</button>
                 </div>
                 <div id="statusMessage" class="status-message" style="display: none;"></div>
             </div>
@@ -461,35 +461,40 @@
             });
             event.target.classList.add('selected');
             
+            // 清空已選擇的參與者
+            selectedParticipants = [];
             updateParticipantButtons();
             generateMessage();
         }
 
         // 切換參與者
         function toggleParticipant(name) {
+            if (!selectedTime) {
+                showStatus('請先選擇時間', 'error');
+                return;
+            }
+
             const index = selectedParticipants.findIndex(p => p.name === name);
             
             if (index > -1) {
+                // 取消選擇
                 selectedParticipants.splice(index, 1);
                 event.target.classList.remove('selected');
+                event.target.textContent = name;
             } else {
-                if (selectedTime) {
-                    selectedParticipants.push({ name: name, time: selectedTime });
-                    event.target.classList.add('selected');
-                } else {
-                    showStatus('請先選擇時間', 'error');
-                    return;
-                }
+                // 選擇參與者
+                selectedParticipants.push({ name: name, time: selectedTime });
+                event.target.classList.add('selected');
+                event.target.textContent = `${name} ✅ (${selectedTime})`;
             }
             
-            updateParticipantButtons();
             generateMessage();
         }
 
         // 更新參與者按鈕顯示
         function updateParticipantButtons() {
             document.querySelectorAll('.participant-buttons .btn').forEach(btn => {
-                const name = btn.textContent;
+                const name = btn.textContent.split(' ✅')[0]; // 取得原始名稱
                 const participant = selectedParticipants.find(p => p.name === name);
                 
                 if (participant) {
@@ -506,6 +511,7 @@
         function generateMessage() {
             if (selectedParticipants.length === 0) {
                 document.getElementById('outputText').textContent = '請選擇時間和參與者來生成訊息';
+                document.getElementById('lineShareBtn').href = '#';
                 return;
             }
 
@@ -533,6 +539,31 @@
             // 更新 LINE 分享連結
             const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
             document.getElementById('lineShareBtn').href = lineUrl;
+        }
+
+        // 清空所有選擇
+        function clearAll() {
+            selectedTime = '';
+            selectedParticipants = [];
+            
+            // 清除時間按鈕選擇
+            document.querySelectorAll('.time-buttons .btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // 清除參與者按鈕選擇
+            document.querySelectorAll('.participant-buttons .btn').forEach(btn => {
+                btn.classList.remove('selected');
+                // 恢復原始名稱
+                const originalName = btn.textContent.split(' ✅')[0];
+                btn.textContent = originalName;
+            });
+            
+            // 清空訊息
+            document.getElementById('outputText').textContent = '請選擇時間和參與者來生成訊息';
+            document.getElementById('lineShareBtn').href = '#';
+            
+            showStatus('已清空所有選擇', 'success');
         }
 
         // 複製文字
