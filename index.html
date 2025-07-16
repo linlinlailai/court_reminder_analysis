@@ -3,77 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>搶場通知產生器</title>
+    <title>🏸 搶場通知產生器</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            padding: 30px;
             text-align: center;
+            padding: 30px;
         }
 
         .header h1 {
-            margin: 0;
             font-size: 2.5em;
-            font-weight: 300;
+            margin-bottom: 10px;
         }
 
-        .firebase-config {
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #e9ecef;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: white;
+            color: #4facfe;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-buttons, .participant-buttons {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .time-buttons {
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+
+        .participant-buttons {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn.selected {
+            background: #4facfe;
+            color: white;
+            border-color: #4facfe;
+        }
+
+        .output-section {
             background: #f8f9fa;
             padding: 20px;
-            border-bottom: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
-        .firebase-config h3 {
-            margin-top: 0;
-            color: #495057;
+        .output-text {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            min-height: 100px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-bottom: 15px;
         }
 
-        .firebase-config input {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            font-size: 14px;
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .firebase-config button {
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .copy-btn {
             background: #28a745;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
         }
 
-        .firebase-config button:hover {
+        .copy-btn:hover {
             background: #218838;
         }
 
+        .line-btn {
+            background: #00c851;
+            color: white;
+        }
+
+        .line-btn:hover {
+            background: #00a844;
+        }
+
         .status-message {
+            margin-top: 15px;
             padding: 10px;
-            margin: 10px 0;
             border-radius: 5px;
-            display: none;
+            font-weight: bold;
         }
 
         .status-success {
@@ -88,158 +190,13 @@
             border: 1px solid #f5c6cb;
         }
 
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
+        .status-loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
 
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            background: #e9ecef;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            background: white;
-            color: #007bff;
-            border-bottom: 3px solid #007bff;
-        }
-
-        .tab:hover {
-            background: #dee2e6;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 30px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .time-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .time-btn {
-            padding: 12px 20px;
-            border: 2px solid #007bff;
-            background: white;
-            color: #007bff;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .time-btn.selected {
-            background: #007bff;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-        }
-
-        .participants {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .participant-btn {
-            padding: 15px;
-            border: 2px solid #6c757d;
-            background: white;
-            color: #6c757d;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .participant-btn.selected {
-            border-color: #28a745;
-            background: #28a745;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(40,167,69,0.3);
-        }
-
-        .actions {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            min-width: 150px;
-        }
-
-        .copy-btn {
-            background: #007bff;
-            color: white;
-        }
-
-        .copy-btn:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .clear-btn {
-            background: #6c757d;
-            color: white;
-        }
-
-        .clear-btn:hover {
-            background: #545b62;
-            transform: translateY(-2px);
-        }
-
-        .line-btn {
-            background: #28a745;
-            color: white;
-        }
-
-        .line-btn:hover {
-            background: #1e7e34;
-            transform: translateY(-2px);
-        }
-
-        .output {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            min-height: 150px;
-            line-height: 1.6;
-        }
-
-        .dashboard {
-            padding: 20px;
-        }
-
+        /* 儀表板樣式 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -251,12 +208,12 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
             margin-bottom: 5px;
         }
@@ -266,46 +223,34 @@
             opacity: 0.9;
         }
 
-        .leaderboard {
+        .ranking-section {
             background: #f8f9fa;
-            border-radius: 10px;
             padding: 20px;
-            margin-bottom: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
-        .leaderboard h3 {
-            margin-top: 0;
-            color: #495057;
-        }
-
-        .leaderboard-item {
+        .ranking-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #dee2e6;
+            padding: 10px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
         }
 
-        .leaderboard-item:last-child {
-            border-bottom: none;
-        }
-
-        .rank {
+        .ranking-number {
             font-weight: bold;
-            color: #007bff;
+            color: #4facfe;
             margin-right: 10px;
         }
 
         .frequency-chart {
             background: #f8f9fa;
-            border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .frequency-chart h3 {
-            margin-top: 0;
-            color: #495057;
+            border-radius: 10px;
         }
 
         .chart-item {
@@ -317,83 +262,47 @@
         .chart-label {
             width: 120px;
             font-size: 14px;
-            color: #495057;
         }
 
         .chart-bar {
-            flex: 1;
             height: 20px;
-            background: #e9ecef;
+            background: #4facfe;
             border-radius: 10px;
             margin: 0 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chart-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            border-radius: 10px;
             transition: width 0.5s ease;
         }
 
         .chart-value {
-            width: 30px;
-            text-align: right;
             font-weight: bold;
-            color: #495057;
+            color: #333;
         }
 
-        .clear-data-btn {
+        .clear-btn {
             background: #dc3545;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
             margin-top: 20px;
         }
 
-        .clear-data-btn:hover {
+        .clear-btn:hover {
             background: #c82333;
         }
 
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
-                border-radius: 10px;
-            }
-
-            .header {
-                padding: 20px;
+                border-radius: 15px;
             }
 
             .header h1 {
                 font-size: 2em;
             }
 
-            .tab-content {
-                padding: 20px;
-            }
-
-            .time-buttons {
-                justify-content: center;
-            }
-
-            .participants {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                min-width: auto;
-            }
-
-            .stats-grid {
+            .participant-buttons {
                 grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
             }
         }
     </style>
@@ -404,276 +313,199 @@
             <h1>🏸 搶場通知產生器</h1>
         </div>
 
-        <div class="firebase-config" id="firebaseConfig">
-            <h3>🔧 Firebase 設定</h3>
-            <input type="text" id="apiKey" placeholder="API Key">
-            <input type="text" id="authDomain" placeholder="Auth Domain (例如: your-project.firebaseapp.com)">
-            <input type="text" id="databaseURL" placeholder="Database URL (例如: https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app/)">
-            <input type="text" id="projectId" placeholder="Project ID">
-            <button onclick="connectFirebase()">連接 Firebase</button>
-            <div id="statusMessage" class="status-message"></div>
-        </div>
-
         <div class="tabs">
-            <button class="tab active" onclick="showTab('generator')">通知產生器</button>
-            <button class="tab" onclick="showTab('dashboard')">打球頻率儀表板</button>
+            <button class="tab active" onclick="switchTab('generator')">通知產生器</button>
+            <button class="tab" onclick="switchTab('dashboard')">打球頻率儀表板</button>
         </div>
 
+        <!-- 通知產生器分頁 -->
         <div id="generator" class="tab-content active">
-            <h2>⏰ 選擇時間</h2>
-            <div class="time-buttons">
-                <button class="time-btn" onclick="selectTime('18:00')">18:00</button>
-                <button class="time-btn" onclick="selectTime('18:30')">18:30</button>
-                <button class="time-btn" onclick="selectTime('19:00')">19:00</button>
-                <button class="time-btn" onclick="selectTime('19:30')">19:30</button>
-                <button class="time-btn" onclick="selectTime('20:00')">20:00</button>
+            <div class="section">
+                <h2>⏰ 選擇時間</h2>
+                <div class="time-buttons">
+                    <button class="btn" onclick="selectTime('18:00')">18:00</button>
+                    <button class="btn" onclick="selectTime('18:30')">18:30</button>
+                    <button class="btn" onclick="selectTime('19:00')">19:00</button>
+                    <button class="btn" onclick="selectTime('19:30')">19:30</button>
+                    <button class="btn" onclick="selectTime('20:00')">20:00</button>
+                </div>
             </div>
 
-            <h2>👥 選擇參與者</h2>
-            <div class="participants">
-                <button class="participant-btn" onclick="toggleParticipant('佳佑 Arvin')">佳佑 Arvin</button>
-                <button class="participant-btn" onclick="toggleParticipant('韋伶 Lynn')">韋伶 Lynn</button>
-                <button class="participant-btn" onclick="toggleParticipant('家榮 Barry')">家榮 Barry</button>
-                <button class="participant-btn" onclick="toggleParticipant('毅庭 Eden')">毅庭 Eden</button>
-                <button class="participant-btn" onclick="toggleParticipant('冠勳 Andersen')">冠勳 Andersen</button>
-                <button class="participant-btn" onclick="toggleParticipant('國宏 Luke')">國宏 Luke</button>
-                <button class="participant-btn" onclick="toggleParticipant('庭宇 Ben')">庭宇 Ben</button>
-                <button class="participant-btn" onclick="toggleParticipant('顯德 Jerry')">顯德 Jerry</button>
-                <button class="participant-btn" onclick="toggleParticipant('嘉聞 ChiaWen')">嘉聞 ChiaWen</button>
-                <button class="participant-btn" onclick="toggleParticipant('富翔 Oscar')">富翔 Oscar</button>
-                <button class="participant-btn" onclick="toggleParticipant('冠翔 Damien')">冠翔 Damien</button>
-                <button class="participant-btn" onclick="toggleParticipant('方煒 Tony')">方煒 Tony</button>
-                <button class="participant-btn" onclick="toggleParticipant('杰凱 Adam')">杰凱 Adam</button>
-                <button class="participant-btn" onclick="toggleParticipant('政宇 Dennis')">政宇 Dennis</button>
-                <button class="participant-btn" onclick="toggleParticipant('宇溢 Eugene')">宇溢 Eugene</button>
-                <button class="participant-btn" onclick="toggleParticipant('鈞貿 CM')">鈞貿 CM</button>
-                <button class="participant-btn" onclick="toggleParticipant('小白 Chuck')">小白 Chuck</button>
-                <button class="participant-btn" onclick="toggleParticipant('楊凱 Zack')">楊凱 Zack</button>
-                <button class="participant-btn" onclick="toggleParticipant('佳宏 Ian')">佳宏 Ian</button>
-                <button class="participant-btn" onclick="toggleParticipant('德慶 Lantis')">德慶 Lantis</button>
-                <button class="participant-btn" onclick="toggleParticipant('嘉胤 John')">嘉胤 John</button>
-                <button class="participant-btn" onclick="toggleParticipant('宗翰')">宗翰</button>
+            <div class="section">
+                <h2>👥 選擇參與者</h2>
+                <div class="participant-buttons">
+                    <button class="btn" onclick="toggleParticipant('佳佑 Arvin')">佳佑 Arvin</button>
+                    <button class="btn" onclick="toggleParticipant('韋伶 Lynn')">韋伶 Lynn</button>
+                    <button class="btn" onclick="toggleParticipant('家榮 Barry')">家榮 Barry</button>
+                    <button class="btn" onclick="toggleParticipant('毅庭 Eden')">毅庭 Eden</button>
+                    <button class="btn" onclick="toggleParticipant('冠勳 Andersen')">冠勳 Andersen</button>
+                    <button class="btn" onclick="toggleParticipant('國宏 Luke')">國宏 Luke</button>
+                    <button class="btn" onclick="toggleParticipant('庭宇 Ben')">庭宇 Ben</button>
+                    <button class="btn" onclick="toggleParticipant('顯德 Jerry')">顯德 Jerry</button>
+                    <button class="btn" onclick="toggleParticipant('嘉聞 ChiaWen')">嘉聞 ChiaWen</button>
+                    <button class="btn" onclick="toggleParticipant('富翔 Oscar')">富翔 Oscar</button>
+                    <button class="btn" onclick="toggleParticipant('冠翔 Damien')">冠翔 Damien</button>
+                    <button class="btn" onclick="toggleParticipant('方煒 Tony')">方煒 Tony</button>
+                    <button class="btn" onclick="toggleParticipant('杰凱 Adam')">杰凱 Adam</button>
+                    <button class="btn" onclick="toggleParticipant('政宇 Dennis')">政宇 Dennis</button>
+                    <button class="btn" onclick="toggleParticipant('宇溢 Eugene')">宇溢 Eugene</button>
+                    <button class="btn" onclick="toggleParticipant('鈞貿 CM')">鈞貿 CM</button>
+                    <button class="btn" onclick="toggleParticipant('小白 Chuck')">小白 Chuck</button>
+                    <button class="btn" onclick="toggleParticipant('楊凱 Zack')">楊凱 Zack</button>
+                    <button class="btn" onclick="toggleParticipant('佳宏 Ian')">佳宏 Ian</button>
+                    <button class="btn" onclick="toggleParticipant('德慶 Lantis')">德慶 Lantis</button>
+                    <button class="btn" onclick="toggleParticipant('嘉胤 John')">嘉胤 John</button>
+                    <button class="btn" onclick="toggleParticipant('宗翰')">宗翰</button>
+                </div>
             </div>
 
-            <div class="actions">
-                <button class="action-btn copy-btn" onclick="copyText()">📋 複製文字</button>
-                <button class="action-btn clear-btn" onclick="clearAll()">🧹 清空全部</button>
-                <button class="action-btn line-btn" onclick="shareToLine()">💬 分享到 LINE</button>
+            <div class="output-section">
+                <h3>📝 生成的訊息</h3>
+                <div id="outputText" class="output-text">請選擇時間和參與者來生成訊息</div>
+                <div class="action-buttons">
+                    <button class="action-btn copy-btn" onclick="copyText()">複製文字</button>
+                    <a id="lineShareBtn" class="action-btn line-btn" href="#" target="_blank">分享到 LINE</a>
+                </div>
+                <div id="statusMessage" class="status-message" style="display: none;"></div>
             </div>
-
-            <div class="output" id="output">請選擇時間和參與者...</div>
         </div>
 
+        <!-- 儀表板分頁 -->
         <div id="dashboard" class="tab-content">
-            <div class="dashboard">
+            <div class="section">
                 <h2>📊 打球頻率統計</h2>
-                
-                <div class="stats-grid">
+                <div id="statsGrid" class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number" id="totalNotifications">0</div>
+                        <div class="stat-number" id="totalNotifications">-</div>
                         <div class="stat-label">總通知次數</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="activeParticipants">0</div>
+                        <div class="stat-number" id="activeParticipants">-</div>
                         <div class="stat-label">活躍參與者</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="lastUpdate">從未</div>
+                        <div class="stat-number" id="lastUpdate">-</div>
                         <div class="stat-label">最後更新</div>
                     </div>
                 </div>
 
-                <div class="leaderboard">
+                <div class="ranking-section">
                     <h3>🏆 參與排行榜 (前5名)</h3>
-                    <div id="leaderboardList">
-                        <div class="leaderboard-item">
-                            <span>暫無數據</span>
-                        </div>
-                    </div>
+                    <div id="rankingList">載入中...</div>
                 </div>
 
                 <div class="frequency-chart">
                     <h3>📈 個人打球頻率</h3>
-                    <div id="frequencyChart">
-                        <div class="chart-item">
-                            <span>暫無數據</span>
-                        </div>
-                    </div>
+                    <div id="frequencyChart">載入中...</div>
                 </div>
 
-                <button class="clear-data-btn" onclick="clearAllData()">清除所有統計資料</button>
+                <button class="action-btn clear-btn" onclick="clearAllData()">清除所有統計資料</button>
             </div>
         </div>
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
+        // Firebase 設定 - 直接寫入程式碼
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGFHc0KRKUeWe8N0GIDB6dyju2",
+            authDomain: "court-reminder-app.firebaseapp.com",
+            databaseURL: "https://court-reminder-app-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "court-reminder-app",
+            storageBucket: "court-reminder-app.firebasestorage.app",
+            messagingSenderId: "102732055590",
+            appId: "1:102732055590:web:728859a327b5b8"
+        };
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 全域變數
         let selectedTime = '';
         let selectedParticipants = [];
-        let isFirebaseConnected = false;
-        let database = null;
+        let isFirebaseConnected = true;
 
-        const participants = [
-            '佳佑 Arvin', '韋伶 Lynn', '家榮 Barry', '毅庭 Eden', '冠勳 Andersen',
-            '國宏 Luke', '庭宇 Ben', '顯德 Jerry', '嘉聞 ChiaWen', '富翔 Oscar',
-            '冠翔 Damien', '方煒 Tony', '杰凱 Adam', '政宇 Dennis', '宇溢 Eugene',
-            '鈞貿 CM', '小白 Chuck', '楊凱 Zack', '佳宏 Ian', '德慶 Lantis',
-            '嘉胤 John', '宗翰'
-        ];
-
-        function connectFirebase() {
-            const apiKey = document.getElementById('apiKey').value;
-            const authDomain = document.getElementById('authDomain').value;
-            const databaseURL = document.getElementById('databaseURL').value;
-            const projectId = document.getElementById('projectId').value;
-
-            if (!apiKey || !authDomain || !databaseURL || !projectId) {
-                showStatus('請填寫所有 Firebase 設定欄位', 'error');
-                return;
-            }
-
-            try {
-                const firebaseConfig = {
-                    apiKey: apiKey,
-                    authDomain: authDomain,
-                    databaseURL: databaseURL,
-                    projectId: projectId
-                };
-
-                firebase.initializeApp(firebaseConfig);
-                database = firebase.database();
-                isFirebaseConnected = true;
-
-                // 儲存設定到 localStorage
-                localStorage.setItem('firebaseConfig', JSON.stringify(firebaseConfig));
-
-                showStatus('Firebase 連接成功！雲端同步已啟用。', 'success');
-                
-                // 隱藏設定區域
-                setTimeout(() => {
-                    document.getElementById('firebaseConfig').style.display = 'none';
-                }, 2000);
-
-                // 載入儀表板數據
-                loadDashboardData();
-            } catch (error) {
-                console.error('Firebase 連接失敗:', error);
-                showStatus('Firebase 連接失敗：' + error.message, 'error');
-            }
-        }
-
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.textContent = message;
-            statusElement.className = `status-message status-${type}`;
-            statusElement.style.display = 'block';
-
-            setTimeout(() => {
-                statusElement.style.display = 'none';
-            }, 5000);
-        }
-
-        // 檢查是否有儲存的 Firebase 設定
-        function checkSavedConfig() {
-            const savedConfig = localStorage.getItem('firebaseConfig');
-            if (savedConfig) {
-                try {
-                    const config = JSON.parse(savedConfig);
-                    document.getElementById('apiKey').value = config.apiKey || '';
-                    document.getElementById('authDomain').value = config.authDomain || '';
-                    document.getElementById('databaseURL').value = config.databaseURL || '';
-                    document.getElementById('projectId').value = config.projectId || '';
-                    
-                    // 自動連接
-                    connectFirebase();
-                } catch (error) {
-                    console.error('載入儲存的設定失敗:', error);
-                }
-            }
-        }
-
-        function showTab(tabName) {
+        // 分頁切換
+        function switchTab(tabName) {
             // 隱藏所有分頁內容
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
-
-            // 移除所有分頁按鈕的 active 類別
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            // 顯示選中的分頁內容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有分頁的 active 類別
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 顯示選中的分頁
             document.getElementById(tabName).classList.add('active');
-
-            // 添加 active 類別到對應的分頁按鈕
             event.target.classList.add('active');
-
-            // 如果切換到儀表板，載入數據
+            
+            // 如果切換到儀表板，載入統計數據
             if (tabName === 'dashboard') {
                 loadDashboardData();
             }
         }
 
+        // 選擇時間
         function selectTime(time) {
             selectedTime = time;
             
-            // 移除所有時間按鈕的選中狀態
-            const timeButtons = document.querySelectorAll('.time-btn');
-            timeButtons.forEach(btn => btn.classList.remove('selected'));
-            
-            // 添加選中狀態到當前按鈕
+            // 更新按鈕樣式
+            document.querySelectorAll('.time-buttons .btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
             event.target.classList.add('selected');
             
             updateParticipantButtons();
-            updateOutput();
+            generateMessage();
         }
 
+        // 切換參與者
         function toggleParticipant(name) {
-            if (!selectedTime) {
-                alert('請先選擇時間！');
-                return;
-            }
-
             const index = selectedParticipants.findIndex(p => p.name === name);
             
             if (index > -1) {
-                // 移除參與者
                 selectedParticipants.splice(index, 1);
                 event.target.classList.remove('selected');
-                event.target.textContent = name;
             } else {
-                // 添加參與者
-                selectedParticipants.push({ name: name, time: selectedTime });
-                event.target.classList.add('selected');
-                event.target.textContent = `${name} ✅ (${selectedTime})`;
+                if (selectedTime) {
+                    selectedParticipants.push({ name: name, time: selectedTime });
+                    event.target.classList.add('selected');
+                } else {
+                    showStatus('請先選擇時間', 'error');
+                    return;
+                }
             }
             
-            updateOutput();
+            updateParticipantButtons();
+            generateMessage();
         }
 
+        // 更新參與者按鈕顯示
         function updateParticipantButtons() {
-            const participantButtons = document.querySelectorAll('.participant-btn');
-            participantButtons.forEach(btn => {
-                const name = btn.textContent.replace(' ✅ (18:00)', '').replace(' ✅ (18:30)', '').replace(' ✅ (19:00)', '').replace(' ✅ (19:30)', '').replace(' ✅ (20:00)', '');
+            document.querySelectorAll('.participant-buttons .btn').forEach(btn => {
+                const name = btn.textContent;
                 const participant = selectedParticipants.find(p => p.name === name);
                 
                 if (participant) {
-                    btn.classList.add('selected');
                     btn.textContent = `${name} ✅ (${participant.time})`;
+                    btn.classList.add('selected');
                 } else {
-                    btn.classList.remove('selected');
                     btn.textContent = name;
+                    btn.classList.remove('selected');
                 }
             });
         }
 
-        function updateOutput() {
-            const output = document.getElementById('output');
-            
+        // 生成訊息
+        function generateMessage() {
             if (selectedParticipants.length === 0) {
-                output.textContent = '請選擇時間和參與者...';
+                document.getElementById('outputText').textContent = '請選擇時間和參與者來生成訊息';
                 return;
             }
 
@@ -686,297 +518,294 @@
                 timeGroups[participant.time].push(participant.name);
             });
 
-            // 生成輸出文字
-            const today = new Date();
-            const dateStr = `${today.getMonth() + 1}/${today.getDate()}`;
-            
-            let outputText = `麻煩${dateStr}晚上代訂場地\n03-560-1068\n場地預約順序ABCD\n`;
+            // 生成訊息
+            let message = '今天打球名單：\n\n';
             
             Object.keys(timeGroups).sort().forEach(time => {
-                const names = timeGroups[time];
-                outputText += `${time}\n`;
-                outputText += `CK17583${names.map(name => name.split(' ')[0]).join('')}\n`;
+                const participants = timeGroups[time];
+                message += `${time}：${participants.join('、')}\n`;
             });
 
-            output.textContent = outputText;
+            message += '\n請大家準時到場！🏸';
+
+            document.getElementById('outputText').textContent = message;
+            
+            // 更新 LINE 分享連結
+            const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+            document.getElementById('lineShareBtn').href = lineUrl;
         }
 
-        function copyText() {
-            const output = document.getElementById('output');
-            const text = output.textContent;
+        // 複製文字
+        async function copyText() {
+            const text = document.getElementById('outputText').textContent;
             
-            if (text === '請選擇時間和參與者...') {
-                alert('請先選擇時間和參與者！');
+            if (text === '請選擇時間和參與者來生成訊息') {
+                showStatus('請先選擇參與者', 'error');
                 return;
             }
 
-            navigator.clipboard.writeText(text).then(() => {
-                // 選中文字以提供視覺反饋
-                const range = document.createRange();
-                range.selectNodeContents(output);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-
-                // 記錄數據
-                recordData();
-            }).catch(err => {
+            try {
+                await navigator.clipboard.writeText(text);
+                showStatus('文字已複製到剪貼簿', 'success');
+                
+                // 記錄數據到雲端
+                await recordCourtData();
+                
+            } catch (err) {
                 console.error('複製失敗:', err);
-                alert('複製失敗，請手動複製文字');
-            });
-        }
-
-        function shareToLine() {
-            const output = document.getElementById('output');
-            const text = output.textContent;
-            
-            if (text === '請選擇時間和參與者...') {
-                alert('請先選擇時間和參與者！');
-                return;
+                showStatus('複製失敗，請手動選取文字', 'error');
             }
-
-            const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(text)}`;
-            window.open(lineUrl, '_blank');
-
-            // 記錄數據
-            recordData();
         }
 
-        function clearAll() {
-            selectedTime = '';
-            selectedParticipants = [];
-            
-            // 清除所有按鈕的選中狀態
-            const timeButtons = document.querySelectorAll('.time-btn');
-            timeButtons.forEach(btn => btn.classList.remove('selected'));
-            
-            const participantButtons = document.querySelectorAll('.participant-btn');
-            participantButtons.forEach((btn, index) => {
-                btn.classList.remove('selected');
-                btn.textContent = participants[index];
-            });
-            
-            updateOutput();
-        }
-
-        function recordData() {
+        // 記錄數據到雲端
+        async function recordCourtData() {
             if (selectedParticipants.length === 0) return;
 
-            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 格式
-            const timestamp = new Date().toISOString();
+            showStatus('正在同步數據...', 'loading');
 
-            const recordData = {
+            try {
+                // 驗證數據格式
+                if (!validateParticipants(selectedParticipants)) {
+                    throw new Error('數據格式不正確');
+                }
+
+                const today = new Date().toISOString().split('T')[0];
+                const data = {
+                    date: today,
+                    participants: selectedParticipants.map(p => p.name),
+                    timestamp: new Date().toISOString()
+                };
+
+                // 寫入當日記錄
+                await database.ref(`court_reminders/${today}`).set(data);
+
+                // 更新統計
+                const statsRef = database.ref('statistics');
+                const snapshot = await statsRef.once('value');
+                const stats = snapshot.val() || {};
+
+                selectedParticipants.forEach(participant => {
+                    const key = participant.name.replace(/\s+/g, '_');
+                    stats[key] = {
+                        name: participant.name,
+                        count: (stats[key] ? stats[key].count : 0) + 1
+                    };
+                });
+
+                await statsRef.set(stats);
+
+                showStatus('數據已同步到雲端', 'success');
+
+            } catch (error) {
+                console.error('記錄數據失敗:', error);
+                showStatus('雲端同步失敗，數據已儲存到本地', 'error');
+                
+                // 備用：儲存到本地
+                saveToLocalStorage();
+            }
+        }
+
+        // 驗證參與者數據
+        function validateParticipants(participants) {
+            if (!Array.isArray(participants)) return false;
+            
+            for (let participant of participants) {
+                if (!participant.name || typeof participant.name !== 'string') return false;
+                if (participant.name.length > 50) return false; // 限制名稱長度
+                if (!/^[a-zA-Z0-9\u4e00-\u9fa5\s]+$/.test(participant.name)) return false; // 只允許中英文數字空格
+            }
+            
+            return participants.length <= 25; // 限制參與者數量
+        }
+
+        // 備用：儲存到本地
+        function saveToLocalStorage() {
+            const today = new Date().toISOString().split('T')[0];
+            const data = {
                 date: today,
                 participants: selectedParticipants.map(p => p.name),
-                timestamp: timestamp
+                timestamp: new Date().toISOString()
             };
 
-            if (isFirebaseConnected && database) {
-                // 儲存到 Firebase
-                saveToFirebase(recordData);
-            } else {
-                // 儲存到 localStorage 作為備用
-                saveToLocalStorage(recordData);
-            }
-        }
+            localStorage.setItem(`court_reminder_${today}`, JSON.stringify(data));
 
-        function saveToFirebase(recordData) {
-            try {
-                // 儲存當日記錄（會覆蓋同一天的舊記錄）
-                database.ref(`court_reminders/${recordData.date}`).set(recordData);
-
-                // 更新個人統計
-                recordData.participants.forEach(participant => {
-                    const participantRef = database.ref(`statistics/${participant.replace(/\s+/g, '_')}`);
-                    participantRef.transaction((currentData) => {
-                        if (currentData === null) {
-                            return {
-                                name: participant,
-                                count: 1
-                            };
-                        } else {
-                            return {
-                                name: participant,
-                                count: currentData.count + 1
-                            };
-                        }
-                    });
-                });
-
-                console.log('數據已儲存到 Firebase');
-            } catch (error) {
-                console.error('Firebase 儲存失敗:', error);
-                // 如果 Firebase 失敗，使用 localStorage 備用
-                saveToLocalStorage(recordData);
-            }
-        }
-
-        function saveToLocalStorage(recordData) {
-            try {
-                // 獲取現有數據
-                const existingData = JSON.parse(localStorage.getItem('courtReminderData') || '{}');
-                
-                // 儲存當日記錄
-                existingData[recordData.date] = recordData;
-                
-                // 更新個人統計
-                const statistics = JSON.parse(localStorage.getItem('courtReminderStats') || '{}');
-                recordData.participants.forEach(participant => {
-                    if (!statistics[participant]) {
-                        statistics[participant] = { name: participant, count: 0 };
-                    }
-                    statistics[participant].count++;
-                });
-                
-                localStorage.setItem('courtReminderData', JSON.stringify(existingData));
-                localStorage.setItem('courtReminderStats', JSON.stringify(statistics));
-                
-                console.log('數據已儲存到本地儲存');
-            } catch (error) {
-                console.error('本地儲存失敗:', error);
-            }
-        }
-
-        function loadDashboardData() {
-            if (isFirebaseConnected && database) {
-                loadFromFirebase();
-            } else {
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromFirebase() {
-            try {
-                // 載入統計數據
-                database.ref('statistics').once('value', (snapshot) => {
-                    const statistics = snapshot.val() || {};
-                    updateDashboard(statistics);
-                });
-
-                // 載入記錄數據以計算總通知次數和最後更新時間
-                database.ref('court_reminders').once('value', (snapshot) => {
-                    const records = snapshot.val() || {};
-                    updateGeneralStats(records);
-                });
-            } catch (error) {
-                console.error('Firebase 載入失敗:', error);
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            try {
-                const statistics = JSON.parse(localStorage.getItem('courtReminderStats') || '{}');
-                const records = JSON.parse(localStorage.getItem('courtReminderData') || '{}');
-                
-                updateDashboard(statistics);
-                updateGeneralStats(records);
-            } catch (error) {
-                console.error('本地儲存載入失敗:', error);
-            }
-        }
-
-        function updateDashboard(statistics) {
-            // 轉換為陣列並排序
-            const statsArray = Object.values(statistics).sort((a, b) => b.count - a.count);
-            
-            // 更新活躍參與者數量
-            document.getElementById('activeParticipants').textContent = statsArray.length;
-            
-            // 更新排行榜
-            updateLeaderboard(statsArray);
-            
-            // 更新頻率圖表
-            updateFrequencyChart(statsArray);
-        }
-
-        function updateGeneralStats(records) {
-            const recordsArray = Object.values(records);
-            
-            // 更新總通知次數
-            document.getElementById('totalNotifications').textContent = recordsArray.length;
-            
-            // 更新最後更新時間
-            if (recordsArray.length > 0) {
-                const lastRecord = recordsArray.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
-                const lastUpdate = new Date(lastRecord.timestamp);
-                const timeStr = lastUpdate.toLocaleString('zh-TW');
-                document.getElementById('lastUpdate').textContent = timeStr;
-            }
-        }
-
-        function updateLeaderboard(statsArray) {
-            const leaderboardList = document.getElementById('leaderboardList');
-            
-            if (statsArray.length === 0) {
-                leaderboardList.innerHTML = '<div class="leaderboard-item"><span>暫無數據</span></div>';
-                return;
-            }
-            
-            const top5 = statsArray.slice(0, 5);
-            leaderboardList.innerHTML = top5.map((stat, index) => `
-                <div class="leaderboard-item">
-                    <span><span class="rank">#${index + 1}</span>${stat.name}</span>
-                    <span>${stat.count} 次</span>
-                </div>
-            `).join('');
-        }
-
-        function updateFrequencyChart(statsArray) {
-            const frequencyChart = document.getElementById('frequencyChart');
-            
-            if (statsArray.length === 0) {
-                frequencyChart.innerHTML = '<div class="chart-item"><span>暫無數據</span></div>';
-                return;
-            }
-            
-            const maxCount = Math.max(...statsArray.map(s => s.count));
-            
-            // 顯示所有參與者，包括次數為 0 的
-            const allParticipants = participants.map(name => {
-                const stat = statsArray.find(s => s.name === name);
-                return {
-                    name: name,
-                    count: stat ? stat.count : 0
-                };
+            // 更新統計
+            selectedParticipants.forEach(participant => {
+                const key = `stats_${participant.name.replace(/\s+/g, '_')}`;
+                const currentCount = parseInt(localStorage.getItem(key) || '0');
+                localStorage.setItem(key, (currentCount + 1).toString());
             });
+        }
+
+        // 載入儀表板數據
+        async function loadDashboardData() {
+            try {
+                const statsRef = database.ref('statistics');
+                const snapshot = await statsRef.once('value');
+                const stats = snapshot.val() || {};
+
+                const statsArray = Object.values(stats).sort((a, b) => b.count - a.count);
+
+                // 獲取最後更新時間
+                const remindersRef = database.ref('court_reminders');
+                const remindersSnapshot = await remindersRef.orderByChild('timestamp').limitToLast(1).once('value');
+                const lastReminder = remindersSnapshot.val();
+                const lastUpdate = lastReminder ? Object.values(lastReminder)[0].date : 'N/A';
+
+                const data = {
+                    totalNotifications: statsArray.reduce((sum, s) => sum + s.count, 0),
+                    activeParticipants: statsArray.length,
+                    lastUpdate: lastUpdate,
+                    statistics: statsArray
+                };
+
+                updateDashboard(data);
+
+            } catch (error) {
+                console.error('載入儀表板數據失敗:', error);
+                // 備用：從本地載入
+                loadLocalDashboardData();
+            }
+        }
+
+        // 更新儀表板顯示
+        function updateDashboard(data) {
+            // 更新總統計
+            document.getElementById('totalNotifications').textContent = data.totalNotifications;
+            document.getElementById('activeParticipants').textContent = data.activeParticipants;
+            document.getElementById('lastUpdate').textContent = data.lastUpdate;
+
+            // 更新排行榜
+            const rankingList = document.getElementById('rankingList');
+            if (data.statistics.length === 0) {
+                rankingList.innerHTML = '<p>尚無數據</p>';
+            } else {
+                rankingList.innerHTML = data.statistics.slice(0, 5).map((stat, index) => `
+                    <div class="ranking-item">
+                        <div>
+                            <span class="ranking-number">#${index + 1}</span>
+                            ${stat.name}
+                        </div>
+                        <div>${stat.count} 次</div>
+                    </div>
+                `).join('');
+            }
+
+            // 更新頻率圖表
+            updateFrequencyChart(data.statistics);
+        }
+
+        // 更新頻率圖表
+        function updateFrequencyChart(statistics) {
+            const chartContainer = document.getElementById('frequencyChart');
             
-            frequencyChart.innerHTML = allParticipants.map(stat => {
-                const percentage = maxCount > 0 ? (stat.count / maxCount) * 100 : 0;
+            if (statistics.length === 0) {
+                chartContainer.innerHTML = '<p>尚無數據</p>';
+                return;
+            }
+
+            const maxCount = Math.max(...statistics.map(s => s.count));
+            
+            // 所有參與者列表
+            const allParticipants = [
+                '佳佑 Arvin', '韋伶 Lynn', '家榮 Barry', '毅庭 Eden', '冠勳 Andersen',
+                '國宏 Luke', '庭宇 Ben', '顯德 Jerry', '嘉聞 ChiaWen', '富翔 Oscar',
+                '冠翔 Damien', '方煒 Tony', '杰凱 Adam', '政宇 Dennis', '宇溢 Eugene',
+                '鈞貿 CM', '小白 Chuck', '楊凱 Zack', '佳宏 Ian', '德慶 Lantis',
+                '嘉胤 John', '宗翰'
+            ];
+
+            chartContainer.innerHTML = allParticipants.map(name => {
+                const stat = statistics.find(s => s.name === name);
+                const count = stat ? stat.count : 0;
+                const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+
                 return `
                     <div class="chart-item">
-                        <div class="chart-label">${stat.name}</div>
-                        <div class="chart-bar">
-                            <div class="chart-fill" style="width: ${percentage}%"></div>
-                        </div>
-                        <div class="chart-value">${stat.count}</div>
+                        <div class="chart-label">${name}</div>
+                        <div class="chart-bar" style="width: ${percentage}%"></div>
+                        <div class="chart-value">${count}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function clearAllData() {
-            if (confirm('確定要清除所有統計資料嗎？此操作無法復原。')) {
-                if (isFirebaseConnected && database) {
-                    // 清除 Firebase 數據
-                    database.ref('statistics').remove();
-                    database.ref('court_reminders').remove();
+        // 備用：從本地載入儀表板數據
+        function loadLocalDashboardData() {
+            // 從 localStorage 載入數據
+            const statistics = [];
+            const allParticipants = [
+                '佳佑 Arvin', '韋伶 Lynn', '家榮 Barry', '毅庭 Eden', '冠勳 Andersen',
+                '國宏 Luke', '庭宇 Ben', '顯德 Jerry', '嘉聞 ChiaWen', '富翔 Oscar',
+                '冠翔 Damien', '方煒 Tony', '杰凱 Adam', '政宇 Dennis', '宇溢 Eugene',
+                '鈞貿 CM', '小白 Chuck', '楊凱 Zack', '佳宏 Ian', '德慶 Lantis',
+                '嘉胤 John', '宗翰'
+            ];
+
+            allParticipants.forEach(name => {
+                const key = `stats_${name.replace(/\s+/g, '_')}`;
+                const count = parseInt(localStorage.getItem(key) || '0');
+                if (count > 0) {
+                    statistics.push({ name, count });
                 }
-                
-                // 清除本地儲存
-                localStorage.removeItem('courtReminderData');
-                localStorage.removeItem('courtReminderStats');
-                
-                // 重新載入儀表板
-                loadDashboardData();
-                
-                alert('所有統計資料已清除');
-            }
+            });
+
+            statistics.sort((a, b) => b.count - a.count);
+
+            const data = {
+                totalNotifications: statistics.reduce((sum, s) => sum + s.count, 0),
+                activeParticipants: statistics.length,
+                lastUpdate: '本地數據',
+                statistics: statistics
+            };
+
+            updateDashboard(data);
         }
 
-        // 頁面載入時檢查儲存的設定
-        window.addEventListener('load', () => {
-            checkSavedConfig();
+        // 清除所有數據
+        async function clearAllData() {
+            if (!confirm('確定要清除所有統計資料嗎？此操作無法復原。')) {
+                return;
+            }
+
+            try {
+                // 清除雲端數據
+                await database.ref('court_reminders').remove();
+                await database.ref('statistics').remove();
+                showStatus('雲端數據已清除', 'success');
+            } catch (error) {
+                console.error('清除雲端數據失敗:', error);
+                showStatus('清除雲端數據失敗，但本地數據已清除', 'error');
+            }
+
+            // 清除本地數據
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.startsWith('stats_') || key.startsWith('court_reminder_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+
+            showStatus('本地數據已清除', 'success');
+            loadDashboardData();
+        }
+
+        // 顯示狀態訊息
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = `status-message status-${type}`;
+            statusElement.style.display = 'block';
+
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 載入儀表板數據
+            loadDashboardData();
         });
     </script>
 </body>
