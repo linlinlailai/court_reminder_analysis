@@ -468,74 +468,97 @@
         }
 
         // 切換參與者
-        function toggleParticipant(name) {
-            if (!selectedTime) {
-                showStatus('請先選擇時間', 'error');
-                return;
-            }
+        // ✅ 更新 toggleParticipant（同個人選擇新時段會更新時間）
+function toggleParticipant(name) {
+    if (!selectedTime) {
+        showStatus('請先選擇時間', 'error');
+        return;
+    }
 
-            const index = selectedParticipants.findIndex(p => p.name === name);
-            
-            if (index > -1) {
-                // 取消選擇
-                selectedParticipants.splice(index, 1);
-                event.target.classList.remove('selected');
-                event.target.textContent = name;
-            } else {
-                // 選擇參與者
-                selectedParticipants.push({ name: name, time: selectedTime });
-                event.target.classList.add('selected');
-                event.target.textContent = `${name} ✅ (${selectedTime})`;
-            }
-            
-            generateMessage();
+    const existingIndex = selectedParticipants.findIndex(p => p.name === name);
+
+    if (existingIndex > -1) {
+        if (selectedParticipants[existingIndex].time === selectedTime) {
+            selectedParticipants.splice(existingIndex, 1); // 取消選擇
+        } else {
+            selectedParticipants[existingIndex].time = selectedTime; // 更新時間
         }
+    } else {
+        selectedParticipants.push({ name, time: selectedTime });
+    }
 
-        // 更新參與者按鈕顯示
-        function updateParticipantButtons() {
-            document.querySelectorAll('.participant-buttons .btn').forEach(btn => {
-                const name = btn.textContent.split(' ✅')[0]; // 取得原始名稱
-                const participant = selectedParticipants.find(p => p.name === name);
-                
-                if (participant) {
-                    btn.textContent = `${name} ✅ (${participant.time})`;
-                    btn.classList.add('selected');
-                } else {
-                    btn.textContent = name;
-                    btn.classList.remove('selected');
-                }
-            });
+    updateParticipantButtons();
+    generateMessage();
+}
+
+        // ✅ 更新 participant button 顯示
+function updateParticipantButtons() {
+    document.querySelectorAll('.participant-buttons .btn').forEach(btn => {
+        const name = btn.textContent.split(' ✅')[0];
+        const participant = selectedParticipants.find(p => p.name === name);
+
+        if (participant) {
+            btn.textContent = `${name} ✅ (${participant.time})`;
+            btn.classList.add('selected');
+        } else {
+            btn.textContent = name;
+            btn.classList.remove('selected');
         }
+    });
+}
 
-        // 生成訊息
-        function generateMessage() {
-            if (selectedParticipants.length === 0) {
-                document.getElementById('outputText').textContent = '請選擇時間和參與者來生成訊息';
-                document.getElementById('lineShareBtn').href = '#';
-                return;
-            }
+        // ✅ 修改訊息格式（照你指定的文字排版）
+function generateMessage() {
+    if (selectedParticipants.length === 0) {
+        document.getElementById('outputText').textContent = '請選擇時間和參與者來生成訊息';
+        document.getElementById('lineShareBtn').href = '#';
+        return;
+    }
 
-            // 按時間分組
-            const timeGroups = {};
-            selectedParticipants.forEach(participant => {
-                if (!timeGroups[participant.time]) {
-                    timeGroups[participant.time] = [];
-                }
-                timeGroups[participant.time].push(participant.name);
-            });
+    const idMap = {
+        '佳佑 Arvin': 'CK17583蔡佳佑483',
+        '韋伶 Lynn': 'CK17671賴韋伶 052',
+        '家榮 Barry': 'CK17653王家榮421',
+        '毅庭 Eden': 'CK17733簡毅庭374',
+        '冠勳 Andersen': 'CK17759陳冠勳033',
+        '國宏 Luke': 'CK17778包國宏063',
+        '庭宇 Ben': 'CK17801劉庭宇161',
+        '顯德 Jerry': 'CK17688王顯德299',
+        '嘉聞 ChiaWen': 'CK17792張嘉聞531',
+        '富翔 Oscar': 'CK17764李富翔947',
+        '冠翔 Damien': 'CK17699葉冠翔885',
+        '方煒 Tony': 'CK17832吳方煒671',
+        '杰凱 Adam': 'CK17688林杰凱092',
+        '政宇 Dennis': 'CK17589李政宇644',
+        '宇溢 Eugene': 'CK17813許宇溢772',
+        '鈞貿 CM': 'CK17644鄧鈞貿158',
+        '小白 Chuck': 'CK17773鄭小白159',
+        '楊凱 Zack': 'CK17594楊凱立305',
+        '佳宏 Ian': 'CK17827廖佳宏810',
+        '德慶 Lantis': 'CK17655林德慶227',
+        '嘉胤 John': 'CK17808李嘉胤583',
+        '宗翰': 'CK17877黃宗翰948'
+    };
 
-            // 生成訊息
-            let message = '今天打球名單：\n\n';
-            
-            Object.keys(timeGroups).sort().forEach(time => {
-                const participants = timeGroups[time];
-                message += `${time}：${participants.join('、')}\n`;
-            });
+    const timeGroups = {};
+    selectedParticipants.forEach(p => {
+        const id = idMap[p.name] || p.name;
+        if (!timeGroups[p.time]) timeGroups[p.time] = [];
+        timeGroups[p.time].push(id);
+    });
 
-            message += '\n請大家準時到場！🏸';
+    let message = `麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD\n`;
 
-            document.getElementById('outputText').textContent = message;
-            
+    Object.keys(timeGroups).sort().forEach(time => {
+        message += `\n${time}\n`;
+        timeGroups[time].forEach(name => {
+            message += `${name}\n`;
+        });
+    });
+
+    document.getElementById('outputText').textContent = message.trim();
+    document.getElementById('lineShareBtn').href = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+}
             // 更新 LINE 分享連結
             const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
             document.getElementById('lineShareBtn').href = lineUrl;
