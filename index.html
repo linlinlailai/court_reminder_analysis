@@ -485,524 +485,432 @@
     </div>
 
     <script>
-        // Firebase 設定
-        const firebaseConfig = {
-            apiKey: "AIzaSyCVOPme4I2DqEu6OGen7D_qVQgpEnT6R7E",
-            authDomain: "court-test-e7de7.firebaseapp.com",
-            databaseURL: "https://court-test-e7de7-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "court-test-e7de7"
-        };
+    // Firebase 設定
+    const firebaseConfig = {
+        apiKey: "AIzaSyCVOPme4I2DqEu6OGen7D_qVQgpEnT6R7E",
+        authDomain: "court-test-e7de7.firebaseapp.com",
+        databaseURL: "https://court-test-e7de7-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "court-test-e7de7"
+    };
 
-        // 全域變數
-        const times = ["18:00", "18:30", "19:00", "19:30", "20:00"];
-        let selectedTime = null;
-        const assignments = {};
-        const playerStatus = {};
-        let isFirebaseConnected = false;
-        let database = null;
+    // 全域變數
+    const times = ["18:00", "18:30", "19:00", "19:30", "20:00"];
+    let selectedTime = null;
+    const assignments = {};
+    const playerStatus = {};
+    let isFirebaseConnected = false;
+    let database = null;
 
-        const players = [
-            { id: "CK17583蔡佳佑483", label: "佳佑 Arvin" },
-            { id: "CK17671賴韋伶052", label: "韋伶 Lynn" },
-            { id: "CK17711楊家榮791", label: "家榮 Barry" },
-            { id: "CK17824陳毅庭705", label: "毅庭 Eden" },
-            { id: "CK17759陳冠勳033", label: "冠勳 Andersen" },
-            { id: "CK17778包國宏063", label: "國宏 Luke" },
-            { id: "CK17801劉庭宇161", label: "庭宇 Ben" },
-            { id: "CK17678廖顯德467", label: "顯德 Jerry" },
-            { id: "CK17792張嘉聞531", label: "嘉聞 ChiaWen" },
-            { id: "CK17718張富翔492", label: "富翔 Oscar" },
-            { id: "CK17795王冠翔436", label: "冠翔 Damien" },
-            { id: "CK17793方  煒218", label: "方煒 Tony" },
-            { id: "CK17812林杰凱808", label: "杰凱 Adam" },
-            { id: "CK17670吳政宇936", label: "政宇 Dennis" },
-            { id: "CK17509曾宇溢406", label: "宇溢 Eugene" },
-            { id: "CK17630詹鈞貿628", label: "鈞貿 CM" },
-            { id: "CK17556白承偉687", label: "小白 Chuck" },
-            { id: "CK17657林楊凱196", label: "楊凱 Zack" },
-            { id: "CK17815蔡佳宏079", label: "佳宏 Ian" },
-            { id: "CK17724謝德慶104", label: "德慶 Lantis" },
-            { id: "CK17835江嘉胤094", label: "嘉胤 John" },
-            { id: "CF32054林宗翰314", label: "宗翰" }
-        ];
+    const players = [
+        { id: "CK17583蔡佳佑483", label: "佳佑 Arvin" },
+        { id: "CK17671賴韋伶052", label: "韋伶 Lynn" },
+        { id: "CK17711楊家榮791", label: "家榮 Barry" },
+        { id: "CK17824陳毅庭705", label: "毅庭 Eden" },
+        { id: "CK17759陳冠勳033", label: "冠勳 Andersen" },
+        { id: "CK17778包國宏063", label: "國宏 Luke" },
+        { id: "CK17801劉庭宇161", label: "庭宇 Ben" },
+        { id: "CK17678廖顯德467", label: "顯德 Jerry" },
+        { id: "CK17792張嘉聞531", label: "嘉聞 ChiaWen" },
+        { id: "CK17718張富翔492", label: "富翔 Oscar" },
+        { id: "CK17795王冠翔436", label: "冠翔 Damien" },
+        { id: "CK17793方  煒218", label: "方煒 Tony" },
+        { id: "CK17812林杰凱808", label: "杰凱 Adam" },
+        { id: "CK17670吳政宇936", label: "政宇 Dennis" },
+        { id: "CK17509曾宇溢406", label: "宇溢 Eugene" },
+        { id: "CK17630詹鈞貿628", label: "鈞貿 CM" },
+        { id: "CK17556白承偉687", label: "小白 Chuck" },
+        { id: "CK17657林楊凱196", label: "楊凱 Zack" },
+        { id: "CK17815蔡佳宏079", label: "佳宏 Ian" },
+        { id: "CK17724謝德慶104", label: "德慶 Lantis" },
+        { id: "CK17835江嘉胤094", label: "嘉胤 John" },
+        { id: "CF32054林宗翰314", label: "宗翰" }
+    ];
 
-        // 初始化 Firebase
-        async function initFirebase() {
-            try {
-                // 動態載入 Firebase SDK
-                const firebaseApp = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js');
-                const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                
-                const app = firebaseApp.initializeApp(firebaseConfig);
-                database = firebaseDatabase.getDatabase(app);
-                
-                // 測試連接
-                const testRef = firebaseDatabase.ref(database, 'test');
-                await firebaseDatabase.set(testRef, { timestamp: Date.now() });
-                
-                isFirebaseConnected = true;
-                updateConnectionStatus(true);
-                loadDashboardData();
-            } catch (error) {
-                console.error('Firebase 連接失敗:', error);
-                isFirebaseConnected = false;
-                updateConnectionStatus(false);
-                loadLocalData();
+    // 初始化 Firebase
+    async function initFirebase( ) {
+        try {
+            const firebaseApp = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js' );
+            const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js' );
+            
+            const app = firebaseApp.initializeApp(firebaseConfig);
+            database = firebaseDatabase.getDatabase(app);
+            
+            const testRef = firebaseDatabase.ref(database, 'test');
+            await firebaseDatabase.set(testRef, { timestamp: Date.now() });
+            
+            isFirebaseConnected = true;
+            updateConnectionStatus(true);
+            loadDashboardData();
+        } catch (error) {
+            console.error('Firebase 連接失敗:', error);
+            isFirebaseConnected = false;
+            updateConnectionStatus(false);
+            loadLocalData();
+        }
+    }
+
+    // 更新連接狀態
+    function updateConnectionStatus(connected) {
+        const statusElements = [document.getElementById('connectionStatus'), document.getElementById('connectionStatus2')];
+        statusElements.forEach(statusElement => {
+            if (connected) {
+                statusElement.className = 'connection-status connected';
+                statusElement.textContent = '✅ 已連接雲端數據庫';
+            } else {
+                statusElement.className = 'connection-status disconnected';
+                statusElement.textContent = '⚠️ 使用本地儲存（雲端連接失敗）';
             }
-        }
+        });
+    }
 
-        // 更新連接狀態
-        function updateConnectionStatus(connected) {
-            const statusElements = [document.getElementById('connectionStatus'), document.getElementById('connectionStatus2')];
-            statusElements.forEach(statusElement => {
-                if (connected) {
-                    statusElement.className = 'connection-status connected';
-                    statusElement.textContent = '✅ 已連接雲端數據庫';
-                } else {
-                    statusElement.className = 'connection-status disconnected';
-                    statusElement.textContent = '⚠️ 使用本地儲存（雲端連接失敗）';
+    // 建立時間按鈕
+    function createTimeButtons() {
+        const timeButtonsDiv = document.getElementById("timeButtons");
+        times.forEach(time => {
+            const btn = document.createElement("button");
+            btn.textContent = time;
+            btn.onclick = () => {
+                selectedTime = time;
+                document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+            };
+            timeButtonsDiv.appendChild(btn);
+        });
+    }
+
+    // 建立人員按鈕
+    function createPlayerButtons() {
+        const playerButtonsDiv = document.getElementById("playerButtons");
+        players.forEach(player => {
+            const btn = document.createElement("button");
+            btn.textContent = player.label;
+            btn.onclick = () => {
+                if (!selectedTime) {
+                    alert("請先選擇一個時段！");
+                    return;
                 }
-            });
-        }
 
-        // 建立時間按鈕
-        function createTimeButtons() {
-            const timeButtonsDiv = document.getElementById("timeButtons");
-            times.forEach(time => {
-                const btn = document.createElement("button");
-                btn.textContent = time;
-                btn.onclick = () => {
-                    selectedTime = time;
-                    document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
-                    btn.classList.add("active");
-                };
-                timeButtonsDiv.appendChild(btn);
-            });
-        }
+                if (playerStatus[player.id] === selectedTime) {
+                    assignments[selectedTime] = assignments[selectedTime].filter(id => id !== player.id);
+                    delete playerStatus[player.id];
+                } else {
+                    if (playerStatus[player.id]) {
+                        const oldTime = playerStatus[player.id];
+                        assignments[oldTime] = assignments[oldTime].filter(id => id !== player.id);
+                    }
+                    playerStatus[player.id] = selectedTime;
+                    if (!assignments[selectedTime]) assignments[selectedTime] = [];
+                    assignments[selectedTime].push(player.id);
+                }
+                updatePlayerButtons();
+                updateOutput();
+            };
+            btn.id = "btn_" + player.id;
+            playerButtonsDiv.appendChild(btn);
+        });
+    }
 
-        // 建立人員按鈕
-        function createPlayerButtons() {
-            const playerButtonsDiv = document.getElementById("playerButtons");
-            players.forEach(player => {
-                const btn = document.createElement("button");
+    // 更新人員按鈕狀態
+    function updatePlayerButtons() {
+        players.forEach(player => {
+            const btn = document.getElementById("btn_" + player.id);
+            if (playerStatus[player.id]) {
+                btn.classList.add("assigned");
+                btn.textContent = player.label + ` ✅ (${playerStatus[player.id]})`;
+            } else {
+                btn.classList.remove("assigned");
                 btn.textContent = player.label;
-                btn.onclick = () => {
-                    if (!selectedTime) {
-                        alert("請先選擇一個時段！");
-                        return;
-                    }
-
-                    // 如果已經選過，且是同一個時段 → 取消分配
-                    if (playerStatus[player.id] === selectedTime) {
-                        assignments[selectedTime] = assignments[selectedTime].filter(id => id !== player.id);
-                        delete playerStatus[player.id];
-                    } else {
-                        // 移除舊時段
-                        if (playerStatus[player.id]) {
-                            const oldTime = playerStatus[player.id];
-                            assignments[oldTime] = assignments[oldTime].filter(id => id !== player.id);
-                        }
-
-                        // 加入新時段
-                        playerStatus[player.id] = selectedTime;
-                        if (!assignments[selectedTime]) assignments[selectedTime] = [];
-                        assignments[selectedTime].push(player.id);
-                    }
-
-                    updatePlayerButtons();
-                    updateOutput();
-                };
-                
-                btn.id = "btn_" + player.id;
-                playerButtonsDiv.appendChild(btn);
-            });
-        }
-
-        // 更新人員按鈕狀態
-        function updatePlayerButtons() {
-            players.forEach(player => {
-                const btn = document.getElementById("btn_" + player.id);
-                if (playerStatus[player.id]) {
-                    btn.classList.add("assigned");
-                    btn.textContent = player.label + ` ✅ (${playerStatus[player.id]})`;
-                } else {
-                    btn.classList.remove("assigned");
-                    btn.textContent = player.label;
-                }
-            });
-        }
-
-        // 更新輸出訊息
-        function updateOutput() {
-            let message = "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD\n";
-            const sortedTimes = Object.keys(assignments).sort();
-            sortedTimes.forEach(time => {
-                if (assignments[time] && assignments[time].length > 0) {
-                    message += time + "\n";
-                    assignments[time].forEach(playerId => {
-                        message += playerId + "\n";
-                    });
-                }
-            });
-            document.getElementById("output").value = message.trim();
-        }
-
-        // 複製到剪貼簿
-        async function copyToClipboard() {
-            const output = document.getElementById("output");
-            const message = output.value;
-            
-            if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
-                alert("目前沒有產生的訊息可以複製！");
-                return;
             }
-            
-            try {
-                await navigator.clipboard.writeText(message);
-                showSuccessMessage("已複製到剪貼簿！");
-                
-                // 記錄數據
-                await recordCourtData();
-            } catch (err) {
-                // 備用方法
-                output.select();
-                document.execCommand("copy");
-                showSuccessMessage("已複製到剪貼簿！");
-                
-                // 記錄數據
-                await recordCourtData();
-            }
-        }
+        });
+    }
 
-        // 分享到 LINE
-        async function shareToLine() {
-            const message = document.getElementById("output").value;
-            if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
-                alert("目前沒有產生的訊息可以分享！");
-                return;
+    // 更新輸出訊息
+    function updateOutput() {
+        let message = "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD\n";
+        const sortedTimes = Object.keys(assignments).sort();
+        sortedTimes.forEach(time => {
+            if (assignments[time] && assignments[time].length > 0) {
+                message += time + "\n";
+                assignments[time].forEach(playerId => {
+                    message += playerId + "\n";
+                });
             }
-            
-            const url = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
-            window.open(url);
-            
-            // 記錄數據
+        });
+        document.getElementById("output").value = message.trim();
+    }
+
+    // 複製到剪貼簿
+    async function copyToClipboard() {
+        const output = document.getElementById("output");
+        const message = output.value;
+        
+        if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
+            alert("目前沒有產生的訊息可以複製！");
+            return;
+        }
+        
+        try {
+            await navigator.clipboard.writeText(message);
+            showSuccessMessage("已複製到剪貼簿！");
+            await recordCourtData();
+        } catch (err) {
+            output.select();
+            document.execCommand("copy");
+            showSuccessMessage("已複製到剪貼簿！");
             await recordCourtData();
         }
+    }
 
-        // 清空全部
-        function clearAll() {
-            selectedTime = null;
-            for (const key in assignments) delete assignments[key];
-            for (const key in playerStatus) delete playerStatus[key];
-            updatePlayerButtons();
-            document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
-            document.getElementById("output").value = "";
-            showSuccessMessage("已清空所有選擇");
+    // 分享到 LINE
+    async function shareToLine() {
+        const message = document.getElementById("output").value;
+        if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
+            alert("目前沒有產生的訊息可以分享！");
+            return;
         }
+        
+        const url = `https://line.me/R/msg/text/?${encodeURIComponent(message )}`;
+        window.open(url);
+        await recordCourtData();
+    }
 
-        // 顯示成功訊息
-        function showSuccessMessage(message) {
-            const messageDiv = document.getElementById("successMessage");
-            messageDiv.className = "success-message";
-            messageDiv.textContent = message;
-            messageDiv.style.display = "block";
-            
-            setTimeout(() => {
-                messageDiv.style.display = "none";
-            }, 3000);
-        }
+    // 清空全部
+    function clearAll() {
+        selectedTime = null;
+        for (const key in assignments) delete assignments[key];
+        for (const key in playerStatus) delete playerStatus[key];
+        updatePlayerButtons();
+        document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
+        document.getElementById("output").value = "";
+        showSuccessMessage("已清空所有選擇");
+    }
 
-        // 記錄打球數據（修改版：同一天最新數據為主）
-        async function recordCourtData() {
-            const today = new Date().toISOString().split('T')[0];
-            const participants = [];
-            
-            // 收集所有參與者
-            Object.values(assignments).forEach(timeSlot => {
-                if (timeSlot && timeSlot.length > 0) {
-                    participants.push(...timeSlot);
-                }
-            });
-            
-            if (participants.length === 0) return;
-            
-            const data = {
-                date: today,
-                participants: participants,
-                timestamp: new Date().toISOString()
-            };
-            
-            if (isFirebaseConnected) {
-                try {
-                    const { ref, set, get, update, remove } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                    
-                    // 檢查當天是否已有記錄
-                    const courtRef = ref(database, `court_reminders/${today}`);
-                    const existingSnapshot = await get(courtRef);
-                    const existingData = existingSnapshot.val();
-                    
-                    // 如果當天已有記錄，先從統計中減去舊的參與者
-                    if (existingData && existingData.participants) {
-                        const statsRef = ref(database, 'statistics');
-                        const statsSnapshot = await get(statsRef);
-                        const currentStats = statsSnapshot.val() || {};
-                        
-                        // 減去舊參與者的統計
-                        existingData.participants.forEach(participantId => {
-                            const key = participantId.replace(/[.#$[\]]/g, '_');
-                            if (currentStats[key] && currentStats[key].count > 0) {
-                                currentStats[key].count -= 1;
-                                // 如果計數變為 0，刪除該項目
-                                if (currentStats[key].count <= 0) {
-                                    delete currentStats[key];
-                                }
-                            }
-                        });
-                        
-                        await set(statsRef, currentStats);
-                    }
-                    
-                    // 記錄新的當日數據
-                    await set(courtRef, data);
-                    
-                    // 更新統計數據（加上新參與者）
-                    const statsRef = ref(database, 'statistics');
-                    const statsSnapshot = await get(statsRef);
-                    const currentStats = statsSnapshot.val() || {};
-                    
-                    participants.forEach(participantId => {
-                        const playerName = players.find(p => p.id === participantId)?.label || participantId;
-                        const key = participantId.replace(/[.#$[\]]/g, '_');
-                        
-                        if (currentStats[key]) {
-                            currentStats[key].count = (currentStats[key].count || 0) + 1;
-                        } else {
-                            currentStats[key] = {
-                                name: playerName,
-                                count: 1
-                            };
-                        }
-                    });
-                    
-                    await set(statsRef, currentStats);
-                    loadDashboardData();
-                } catch (error) {
-                    console.error('Firebase 寫入失敗:', error);
-                    recordLocalData(data, participants);
-                }
+    // 顯示成功訊息
+    function showSuccessMessage(message) {
+        const messageDiv = document.getElementById("successMessage");
+        messageDiv.className = "success-message";
+        messageDiv.textContent = message;
+        messageDiv.style.display = "block";
+        setTimeout(() => { messageDiv.style.display = "none"; }, 3000);
+    }
+
+    // *** 核心修改：更新統計數據的通用函式 ***
+    function updateStatistics(stats, oldParticipants, newParticipants) {
+        const oldSet = new Set(oldParticipants);
+        const newSet = new Set(newParticipants);
+
+        // 新增的成員: 在新名單但不在舊名單
+        const added = newParticipants.filter(p => !oldSet.has(p));
+        // 移除的成員: 在舊名單但不在新名單
+        const removed = oldParticipants.filter(p => !newSet.has(p));
+
+        added.forEach(participantId => {
+            const playerName = players.find(p => p.id === participantId)?.label || participantId;
+            const key = participantId.replace(/[.#$[\]]/g, '_');
+            if (stats[key]) {
+                stats[key].count = (stats[key].count || 0) + 1;
             } else {
-                recordLocalData(data, participants);
+                stats[key] = { name: playerName, count: 1 };
             }
-        }
+        });
 
-        // 記錄本地數據（修改版：同一天最新數據為主）
-        function recordLocalData(data, participants) {
-            try {
-                const today = data.date;
-                
-                // 檢查當天是否已有記錄
-                const courtData = JSON.parse(localStorage.getItem('courtReminders') || '{}');
-                const existingData = courtData[today];
-                
-                // 如果當天已有記錄，先從統計中減去舊的參與者
-                if (existingData && existingData.participants) {
-                    const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
-                    
-                    // 減去舊參與者的統計
-                    existingData.participants.forEach(participantId => {
-                        const key = participantId.replace(/[.#$[\]]/g, '_');
-                        if (stats[key] && stats[key].count > 0) {
-                            stats[key].count -= 1;
-                            // 如果計數變為 0，刪除該項目
-                            if (stats[key].count <= 0) {
-                                delete stats[key];
-                            }
-                        }
-                    });
-                    
-                    localStorage.setItem('courtStatistics', JSON.stringify(stats));
+        removed.forEach(participantId => {
+            const key = participantId.replace(/[.#$[\]]/g, '_');
+            if (stats[key] && stats[key].count > 0) {
+                stats[key].count -= 1;
+                if (stats[key].count <= 0) {
+                    delete stats[key]; // 如果次數歸零，則移除該成員
                 }
+            }
+        });
+        return stats;
+    }
+
+    // *** 核心修改：記錄打球數據 (Firebase) ***
+    async function recordCourtData() {
+        const today = new Date().toISOString().split('T')[0];
+        const newParticipants = Object.values(assignments).flat();
+        
+        if (newParticipants.length === 0) return;
+
+        const data = {
+            date: today,
+            participants: newParticipants,
+            timestamp: new Date().toISOString()
+        };
+
+        if (isFirebaseConnected) {
+            try {
+                const { ref, set, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js' );
                 
-                // 記錄新的當日數據
-                courtData[today] = data;
-                localStorage.setItem('courtReminders', JSON.stringify(courtData));
+                const courtRef = ref(database, `court_reminders/${today}`);
+                const statsRef = ref(database, 'statistics');
+
+                const [courtSnapshot, statsSnapshot] = await Promise.all([get(courtRef), get(statsRef)]);
                 
-                // 更新統計數據（加上新參與者）
-                const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
-                participants.forEach(participantId => {
-                    const playerName = players.find(p => p.id === participantId)?.label || participantId;
-                    const key = participantId.replace(/[.#$[\]]/g, '_');
-                    
-                    if (stats[key]) {
-                        stats[key].count = (stats[key].count || 0) + 1;
-                    } else {
-                        stats[key] = {
-                            name: playerName,
-                            count: 1
-                        };
-                    }
-                });
+                const existingData = courtSnapshot.val();
+                const currentStats = statsSnapshot.val() || {};
                 
-                localStorage.setItem('courtStatistics', JSON.stringify(stats));
+                const oldParticipants = existingData ? existingData.participants : [];
+                const updatedStats = updateStatistics(currentStats, oldParticipants, newParticipants);
+
+                await set(courtRef, data);
+                await set(statsRef, updatedStats);
+                
                 loadDashboardData();
             } catch (error) {
-                console.error('本地儲存失敗:', error);
+                console.error('Firebase 寫入失敗:', error);
+                recordLocalData(data); // 雲端失敗時，轉為本地記錄
             }
+        } else {
+            recordLocalData(data);
         }
+    }
 
-        // 載入儀表板數據
-        async function loadDashboardData() {
-            if (isFirebaseConnected) {
-                try {
-                    const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                    
-                    const statsRef = ref(database, 'statistics');
-                    const statsSnapshot = await get(statsRef);
-                    const stats = statsSnapshot.val() || {};
-                    
-                    const courtRef = ref(database, 'court_reminders');
-                    const courtSnapshot = await get(courtRef);
-                    const courtData = courtSnapshot.val() || {};
-                    
-                    updateDashboard(stats, courtData);
-                } catch (error) {
-                    console.error('Firebase 讀取失敗:', error);
-                    loadLocalData();
-                }
-            } else {
+    // *** 核心修改：記錄本地數據 ***
+    function recordLocalData(data) {
+        try {
+            const today = data.date;
+            const newParticipants = data.participants;
+
+            const courtData = JSON.parse(localStorage.getItem('courtReminders') || '{}');
+            const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
+
+            const existingData = courtData[today];
+            const oldParticipants = existingData ? existingData.participants : [];
+            
+            const updatedStats = updateStatistics(stats, oldParticipants, newParticipants);
+
+            courtData[today] = data;
+            localStorage.setItem('courtReminders', JSON.stringify(courtData));
+            localStorage.setItem('courtStatistics', JSON.stringify(updatedStats));
+            
+            loadDashboardData();
+        } catch (error) {
+            console.error('本地儲存失敗:', error);
+        }
+    }
+
+    // 載入儀表板數據
+    async function loadDashboardData() {
+        if (isFirebaseConnected) {
+            try {
+                const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js' );
+                const statsRef = ref(database, 'statistics');
+                const courtRef = ref(database, 'court_reminders');
+                const [statsSnapshot, courtSnapshot] = await Promise.all([get(statsRef), get(courtRef)]);
+                updateDashboard(statsSnapshot.val() || {}, courtSnapshot.val() || {});
+            } catch (error) {
+                console.error('Firebase 讀取失敗:', error);
                 loadLocalData();
             }
+        } else {
+            loadLocalData();
         }
+    }
 
-        // 載入本地數據
-        function loadLocalData() {
-            try {
-                const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
-                const courtData = JSON.parse(localStorage.getItem('courtReminders') || '{}');
-                updateDashboard(stats, courtData);
-            } catch (error) {
-                console.error('本地數據讀取失敗:', error);
-                updateDashboard({}, {});
-            }
+    // 載入本地數據
+    function loadLocalData() {
+        try {
+            const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
+            const courtData = JSON.parse(localStorage.getItem('courtReminders') || '{}');
+            updateDashboard(stats, courtData);
+        } catch (error) {
+            console.error('本地數據讀取失敗:', error);
+            updateDashboard({}, {});
         }
+    }
 
-        // 更新儀表板顯示
-        function updateDashboard(stats, courtData) {
-            // 計算總統計
-            const totalNotifications = Object.keys(courtData).length;
-            const activeParticipants = Object.keys(stats).length;
-            const lastUpdate = Object.keys(courtData).length > 0 ? 
-                new Date(Math.max(...Object.values(courtData).map(d => new Date(d.timestamp)))).toLocaleDateString() : 
-                '從未';
-            
-            document.getElementById('totalNotifications').textContent = totalNotifications;
-            document.getElementById('activeParticipants').textContent = activeParticipants;
-            document.getElementById('lastUpdate').textContent = lastUpdate;
-            
-            // 更新排行榜
-            const sortedStats = Object.entries(stats)
-                .sort(([,a], [,b]) => (b.count || 0) - (a.count || 0))
-                .slice(0, 5);
-            
-            const leaderboard = document.getElementById('leaderboard');
-            if (sortedStats.length === 0) {
-                leaderboard.innerHTML = '<div class="leaderboard-item"><span>暫無數據</span><span>0 次</span></div>';
-            } else {
-                leaderboard.innerHTML = sortedStats.map(([key, data]) => 
-                    `<div class="leaderboard-item">
-                        <span>${data.name}</span>
-                        <span>${data.count} 次</span>
-                    </div>`
-                ).join('');
-            }
-            
-            // 更新頻率圖表
-            const allStats = Object.entries(stats).sort(([,a], [,b]) => (b.count || 0) - (a.count || 0));
-            const maxCount = allStats.length > 0 ? Math.max(...allStats.map(([,data]) => data.count || 0)) : 1;
-            
-            const frequencyChart = document.getElementById('frequencyChart');
-            if (allStats.length === 0) {
-                frequencyChart.innerHTML = `
+    // 更新儀表板顯示
+    function updateDashboard(stats, courtData) {
+        const totalNotifications = Object.keys(courtData).length;
+        const activeParticipants = Object.keys(stats).filter(key => stats[key].count > 0).length;
+        const lastUpdate = Object.keys(courtData).length > 0 ? 
+            new Date(Math.max(...Object.values(courtData).map(d => new Date(d.timestamp)))).toLocaleDateString() : 
+            '從未';
+        
+        document.getElementById('totalNotifications').textContent = totalNotifications;
+        document.getElementById('activeParticipants').textContent = activeParticipants;
+        document.getElementById('lastUpdate').textContent = lastUpdate;
+        
+        const sortedStats = Object.entries(stats)
+            .filter(([,data]) => data.count > 0) // 只顯示次數大於0的
+            .sort(([,a], [,b]) => (b.count || 0) - (a.count || 0));
+        
+        const leaderboard = document.getElementById('leaderboard');
+        if (sortedStats.length === 0) {
+            leaderboard.innerHTML = '<div class="leaderboard-item"><span>暫無數據</span><span>0 次</span></div>';
+        } else {
+            leaderboard.innerHTML = sortedStats.slice(0, 5).map(([key, data]) => 
+                `<div class="leaderboard-item">
+                    <span>${data.name}</span>
+                    <span>${data.count} 次</span>
+                </div>`
+            ).join('');
+        }
+        
+        const frequencyChart = document.getElementById('frequencyChart');
+        if (sortedStats.length === 0) {
+            frequencyChart.innerHTML = `<div class="chart-item"><div class="chart-label">暫無數據</div><div class="chart-bar"><div class="chart-fill" style="width: 0%"></div></div><div class="chart-value">0</div></div>`;
+        } else {
+            const maxCount = sortedStats.length > 0 ? sortedStats[0][1].count : 1;
+            frequencyChart.innerHTML = sortedStats.map(([key, data]) => {
+                const percentage = (data.count / maxCount) * 100;
+                return `
                     <div class="chart-item">
-                        <div class="chart-label">暫無數據</div>
+                        <div class="chart-label">${data.name}</div>
                         <div class="chart-bar">
-                            <div class="chart-fill" style="width: 0%"></div>
+                            <div class="chart-fill" style="width: ${percentage}%"></div>
                         </div>
-                        <div class="chart-value">0</div>
+                        <div class="chart-value">${data.count}</div>
                     </div>
                 `;
-            } else {
-                frequencyChart.innerHTML = allStats.map(([key, data]) => {
-                    const percentage = (data.count / maxCount) * 100;
-                    return `
-                        <div class="chart-item">
-                            <div class="chart-label">${data.name}</div>
-                            <div class="chart-bar">
-                                <div class="chart-fill" style="width: ${percentage}%"></div>
-                            </div>
-                            <div class="chart-value">${data.count}</div>
-                        </div>
-                    `;
-                }).join('');
-            }
+            }).join('');
         }
+    }
 
-        // 清除所有數據
-        async function clearAllData() {
-            if (confirm('確定要清除所有統計資料嗎？此操作無法復原。')) {
-                if (isFirebaseConnected) {
-                    try {
-                        const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                        
-                        await remove(ref(database, 'statistics'));
-                        await remove(ref(database, 'court_reminders'));
-                        
-                        loadDashboardData();
-                        showSuccessMessage('已清除所有雲端統計資料');
-                    } catch (error) {
-                        console.error('清除雲端數據失敗:', error);
-                        alert('清除雲端數據失敗，請稍後再試');
-                    }
-                } else {
-                    localStorage.removeItem('courtStatistics');
-                    localStorage.removeItem('courtReminders');
+    // 清除所有數據
+    async function clearAllData() {
+        if (confirm('確定要清除所有統計資料嗎？此操作無法復原。')) {
+            if (isFirebaseConnected) {
+                try {
+                    const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js' );
+                    await remove(ref(database, 'statistics'));
+                    await remove(ref(database, 'court_reminders'));
                     loadDashboardData();
-                    showSuccessMessage('已清除所有本地統計資料');
+                    showSuccessMessage('已清除所有雲端統計資料');
+                } catch (error) {
+                    console.error('清除雲端數據失敗:', error);
+                    alert('清除雲端數據失敗，請稍後再試');
                 }
-            }
-        }
-
-        // 分頁切換
-        function showTab(tabName) {
-            // 隱藏所有分頁內容
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // 移除所有分頁按鈕的 active 狀態
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // 顯示選中的分頁內容
-            document.getElementById(tabName).classList.add('active');
-            
-            // 設定對應的分頁按鈕為 active
-            event.target.classList.add('active');
-            
-            // 如果切換到儀表板，載入數據
-            if (tabName === 'dashboard') {
+            } else {
+                localStorage.removeItem('courtStatistics');
+                localStorage.removeItem('courtReminders');
                 loadDashboardData();
+                showSuccessMessage('已清除所有本地統計資料');
             }
         }
+    }
 
-        // 頁面載入完成後初始化
-        window.addEventListener('load', () => {
-            createTimeButtons();
-            createPlayerButtons();
-            initFirebase();
-        });
-    </script>
+    // 分頁切換
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if (tabName === 'dashboard') {
+            loadDashboardData();
+        }
+    }
+
+    // 頁面載入完成後初始化
+    window.addEventListener('load', () => {
+        createTimeButtons();
+        createPlayerButtons();
+        initFirebase();
+    });
+</script>
+
 </body>
 </html>
 
