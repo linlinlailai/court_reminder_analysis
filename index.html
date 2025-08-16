@@ -351,7 +351,7 @@
         
         .chart-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #778899 0%, #D3D3D3 100%);
             border-radius: 12px;
             transition: width 0.8s ease;
         }
@@ -495,10 +495,6 @@
             display: block;
         }
 
-
-
-        
-
         .tactical-controls {
             display: flex;
             gap: 15px;
@@ -529,6 +525,190 @@
             color: #666;
             font-size: 14px;
         }
+
+        /* === 新增：計分板樣式 === */
+        #scoreboard-page {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 75vh;
+            user-select: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
+        }
+
+        /* 遊戲結束時的背景變化 - 修改為淺灰色 */
+        #scoreboard-page.game-ended {
+            background: linear-gradient(135deg, #778899 0%, #808080 100%);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .scoreboard-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .scoreboard-display {
+            font-size: 5em;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .scoreboard-display .winner {
+            color: #f1c40f;
+            font-weight: 900;
+            transform: scale(1.2);
+            display: inline-block;
+            text-shadow: 0 0 30px rgba(241, 196, 15, 0.8);
+            animation: winnerPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes winnerPulse {
+            0% { 
+                transform: scale(1.2); 
+                text-shadow: 0 0 30px rgba(241, 196, 15, 0.8);
+            }
+            100% { 
+                transform: scale(1.3); 
+                text-shadow: 0 0 40px rgba(241, 196, 15, 1);
+            }
+        }
+
+        .scoreboard-main {
+            flex-grow: 1;
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .scoreboard-tap-area {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scoreboard-tap-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .scoreboard-tap-area:active::before {
+            opacity: 1;
+        }
+
+        .scoreboard-tap-area:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* 遊戲結束時禁用點擊區域 */
+        .game-ended .scoreboard-tap-area {
+            cursor: not-allowed;
+            opacity: 0.6;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .game-ended .scoreboard-tap-area:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        #tap-area-a::after {
+            content: "左隊 +1\A長按-1";
+            position: absolute;
+            font-size: 0.4em;
+            opacity: 0.6;
+            white-space: pre;
+        }
+
+
+        #tap-area-b::after {
+            content: "右隊 +1\A長按-1";
+            position: absolute;
+            font-size: 0.4em;
+            opacity: 0.6;
+            white-space: pre;
+        }
+
+        .game-ended #tap-area-a::after,
+        .game-ended #tap-area-b::after {
+            content: "比賽結束";
+            opacity: 0.4;
+        }
+
+        .scoreboard-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .scoreboard-btn {
+            padding: 18px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .scoreboard-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* 遊戲狀態指示器 */
+        .game-status {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .game-status.winner-announced {
+            color: #f1c40f;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        /* === 計分板樣式結束 === */
         
         @media (max-width: 768px) {
             .container {
@@ -567,7 +747,51 @@
                 width: 45px;
                 height: 45px;
             }
+
+            /* 計分板手機優化 */
+            .scoreboard-display {
+                font-size: 3.5em;
+                letter-spacing: 4px;
+            }
+            
+            #scoreboard-page {
+                height: 80vh;
+                padding: 15px;
+            }
+
+            .scoreboard-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .scoreboard-btn {
+                padding: 15px 25px;
+                font-size: 14px;
+            }
+
+            #tap-area-a::after,
+            #tap-area-b::after {
+                font-size: 0.35em;
+            }
         }
+
+            .score-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                padding: 8px 0;
+                font-size: 0.8em;
+                color: rgba(255, 255, 255, 0.6); /* 淡灰字 */
+                background-color: #2f3b4a;       /* 深藍背景 */
+                border-top: 1px solid rgba(255, 255, 255, 0.2); /* 淡灰分隔線 */
+}
+
+
+
+
+        
     </style>
 </head>
 <body>
@@ -578,6 +802,8 @@
             <button class="tab active" onclick="showTab('generator')">通知產生器</button>
             <button class="tab" onclick="showTab('dashboard')">打球頻率儀表板</button>
             <button class="tab" onclick="showTab('tactical')">戰術板</button>
+            <!-- 新增：計分板按鈕 -->
+            <button class="tab" onclick="showTab('scoreboard')">計分板</button>
         </div>
         
         <div id="generator" class="tab-content active">
@@ -703,6 +929,26 @@
                 </div>
             </div>
         </div>
+
+        <!-- 新增：計分板內容 -->
+        <div id="scoreboard" class="tab-content">
+            <div id="scoreboard-page">
+                <div class="game-status" id="game-status"></div>
+                <div class="scoreboard-header">
+                    <div class="scoreboard-display">
+                        <span id="score-a">0</span> : <span id="score-b">0</span>
+                    </div>
+                </div>
+                <div class="scoreboard-main">
+                    <div id="tap-area-a" class="scoreboard-tap-area"></div>
+                    <div id="tap-area-b" class="scoreboard-tap-area"></div>
+                </div>
+                <div class="scoreboard-controls">
+                    <button id="swap-btn" class="scoreboard-btn">🔄 交換場地</button>
+                    <button id="reset-score-btn" class="scoreboard-btn">🧹 重設分數</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -761,6 +1007,13 @@
         player4: { x: 70, y: 25 },   // 上半場右側
         shuttlecock: { x: 50, y: 50 }  // 新增羽球初始位置
     };
+
+    // === 新增：計分板相關變數 ===
+    let scoreA = 0;
+    let scoreB = 0;
+    let gameEnded = false;
+    let longPressTimer = null;
+    let isLongPress = false;
 
     // 初始化 Firebase
     async function initFirebase() {
@@ -930,7 +1183,7 @@
         setTimeout(() => { messageDiv.style.display = "none"; }, 3000);
     }
 
-    // 更新統計數據的通用函式
+    // === 恢復原始的統計邏輯 ===
     function updateStatistics(stats, oldParticipants, newParticipants) {
         const oldSet = new Set(oldParticipants);
         const newSet = new Set(newParticipants);
@@ -960,7 +1213,7 @@
         return stats;
     }
 
-    // 記錄打球數據 (Firebase)
+    // === 恢復原始的記錄打球數據邏輯 ===
     async function recordCourtData() {
         const today = new Date().toISOString().split('T')[0];
         const newParticipants = Object.values(assignments).flat();
@@ -1001,7 +1254,7 @@
         }
     }
 
-    // 記錄本地數據
+    // === 恢復原始的記錄本地數據邏輯 ===
     function recordLocalData(data) {
         try {
             const today = data.date;
@@ -1028,113 +1281,139 @@
     // 載入儀表板數據
     async function loadDashboardData() {
         if (isFirebaseConnected) {
-            try {
-                const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                const statsRef = ref(database, 'statistics');
-                const courtRef = ref(database, 'court_reminders');
-                const [statsSnapshot, courtSnapshot] = await Promise.all([get(statsRef), get(courtRef)]);
-                updateDashboard(statsSnapshot.val() || {}, courtSnapshot.val() || {});
-            } catch (error) {
-                console.error('Firebase 讀取失敗:', error);
-                loadLocalData();
-            }
+            await loadFirebaseData();
         } else {
             loadLocalData();
         }
     }
 
-    // 載入本地數據
+    // === 修正：載入 Firebase 數據並正確計算總通知次數 ===
+    async function loadFirebaseData() {
+        try {
+            const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
+            const statsRef = ref(database, 'statistics');
+            const remindersRef = ref(database, 'court_reminders');
+            
+            const [statsSnapshot, remindersSnapshot] = await Promise.all([get(statsRef), get(remindersRef)]);
+            
+            const stats = statsSnapshot.exists() ? statsSnapshot.val() : {};
+            const reminders = remindersSnapshot.exists() ? remindersSnapshot.val() : {};
+            
+            updateDashboard(stats, reminders);
+        } catch (error) {
+            console.error('載入 Firebase 數據失敗:', error);
+            loadLocalData();
+        }
+    }
+
+    // === 修正：載入本地數據並正確計算總通知次數 ===
     function loadLocalData() {
         try {
             const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
-            const courtData = JSON.parse(localStorage.getItem('courtReminders') || '{}');
-            updateDashboard(stats, courtData);
+            const reminders = JSON.parse(localStorage.getItem('courtReminders') || '{}');
+            updateDashboard(stats, reminders);
         } catch (error) {
-            console.error('本地數據讀取失敗:', error);
+            console.error('載入本地數據失敗:', error);
             updateDashboard({}, {});
         }
     }
 
-    // 更新儀表板顯示
-    function updateDashboard(stats, courtData) {
-        const totalNotifications = Object.keys(courtData).length;
-        const activeParticipants = Object.keys(stats).filter(key => stats[key].count > 0).length;
-        const lastUpdate = Object.keys(courtData).length > 0 ? 
-            new Date(Math.max(...Object.values(courtData).map(d => new Date(d.timestamp)))).toLocaleDateString() : 
-            '從未';
+    // === 修正：更新儀表板顯示，正確計算總通知次數 ===
+    function updateDashboard(stats, reminders) {
+        // 總通知次數 = 有產生通知的天數（court_reminders 的鍵值數量）
+        const totalNotifications = Object.keys(reminders).length;
+        const activeParticipants = Object.keys(stats).length;
         
         document.getElementById('totalNotifications').textContent = totalNotifications;
         document.getElementById('activeParticipants').textContent = activeParticipants;
+        
+        const lastUpdate = totalNotifications > 0 ? new Date().toLocaleDateString('zh-TW') : '從未';
         document.getElementById('lastUpdate').textContent = lastUpdate;
-        
-        const sortedStats = Object.entries(stats)
-            .filter(([,data]) => data.count > 0)
-            .sort(([,a], [,b]) => (b.count || 0) - (a.count || 0));
-        
+
+        updateLeaderboard(stats);
+        updateFrequencyChart(stats);
+    }
+
+    // 更新排行榜
+    function updateLeaderboard(stats) {
         const leaderboard = document.getElementById('leaderboard');
-        if (sortedStats.length === 0) {
+        const sortedPlayers = Object.entries(stats)
+            .map(([key, data]) => ({ name: data.name, count: data.count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5);
+
+        if (sortedPlayers.length === 0) {
             leaderboard.innerHTML = '<div class="leaderboard-item"><span>暫無數據</span><span>0 次</span></div>';
-        } else {
-            leaderboard.innerHTML = sortedStats.slice(0, 5).map(([key, data]) => 
-                `<div class="leaderboard-item">
-                    <span>${data.name}</span>
-                    <span>${data.count} 次</span>
-                </div>`
-            ).join('');
+            return;
         }
+
+        leaderboard.innerHTML = sortedPlayers
+            .map(player => `<div class="leaderboard-item"><span>${player.name}</span><span>${player.count} 次</span></div>`)
+            .join('');
+    }
+
+    // 更新頻率圖表
+    function updateFrequencyChart(stats) {
+        const chart = document.getElementById('frequencyChart');
+        const sortedPlayers = Object.entries(stats)
+            .map(([key, data]) => ({ name: data.name, count: data.count }))
+            .sort((a, b) => b.count - a.count);
+
+        if (sortedPlayers.length === 0) {
+            chart.innerHTML = '<div class="chart-item"><div class="chart-label">暫無數據</div><div class="chart-bar"><div class="chart-fill" style="width: 0%"></div></div><div class="chart-value">0</div></div>';
+            return;
+        }
+
+        const maxCount = Math.max(...sortedPlayers.map(p => p.count));
         
-        const frequencyChart = document.getElementById('frequencyChart');
-        if (sortedStats.length === 0) {
-            frequencyChart.innerHTML = `<div class="chart-item"><div class="chart-label">暫無數據</div><div class="chart-bar"><div class="chart-fill" style="width: 0%"></div></div><div class="chart-value">0</div></div>`;
-        } else {
-            const maxCount = sortedStats.length > 0 ? sortedStats[0][1].count : 1;
-            frequencyChart.innerHTML = sortedStats.map(([key, data]) => {
-                const percentage = (data.count / maxCount) * 100;
+        chart.innerHTML = sortedPlayers
+            .map(player => {
+                const percentage = maxCount > 0 ? (player.count / maxCount) * 100 : 0;
                 return `
                     <div class="chart-item">
-                        <div class="chart-label">${data.name}</div>
+                        <div class="chart-label">${player.name}</div>
                         <div class="chart-bar">
                             <div class="chart-fill" style="width: ${percentage}%"></div>
                         </div>
-                        <div class="chart-value">${data.count}</div>
+                        <div class="chart-value">${player.count}</div>
                     </div>
                 `;
-            }).join('');
-        }
+            })
+            .join('');
     }
 
-    // 清除所有數據
+    // 清除所有統計資料
     async function clearAllData() {
-        if (confirm('確定要清除所有統計資料嗎？此操作無法復原。')) {
-            if (isFirebaseConnected) {
-                try {
-                    const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                    await remove(ref(database, 'statistics'));
-                    await remove(ref(database, 'court_reminders'));
-                    loadDashboardData();
-                    showSuccessMessage('已清除所有雲端統計資料');
-                } catch (error) {
-                    console.error('清除雲端數據失敗:', error);
-                    alert('清除雲端數據失敗，請稍後再試');
-                }
-            } else {
-                localStorage.removeItem('courtStatistics');
-                localStorage.removeItem('courtReminders');
-                loadDashboardData();
-                showSuccessMessage('已清除所有本地統計資料');
+        if (!confirm('確定要清除所有統計資料嗎？此操作無法復原！')) {
+            return;
+        }
+
+        if (isFirebaseConnected) {
+            try {
+                const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
+                const statsRef = ref(database, 'statistics');
+                const remindersRef = ref(database, 'court_reminders');
+                
+                await Promise.all([remove(statsRef), remove(remindersRef)]);
+                showSuccessMessage('雲端統計資料已清除');
+            } catch (error) {
+                console.error('清除雲端數據失敗:', error);
+                showSuccessMessage('清除雲端數據失敗，請稍後再試');
             }
         }
+
+        // 清除本地數據
+        localStorage.removeItem('courtReminders');
+        localStorage.removeItem('courtStatistics');
+
+        updateDashboard({}, {});
+        showSuccessMessage('本地統計資料已清除');
     }
 
-    // 戰術板功能
+    // 戰術板初始化
     function initTacticalBoard() {
-        const courtContainer = document.getElementById('courtContainer');
-        const playerDots = document.querySelectorAll('.player-dot');
-
-        // 設置初始位置
-        resetPlayerPositions();
-
-        // 為每個圓點添加事件監聽器
+        const playerDots = document.querySelectorAll('.player-dot, .shuttlecock');
+        
         playerDots.forEach(dot => {
             // 滑鼠事件
             dot.addEventListener('mousedown', startDrag);
@@ -1143,18 +1422,16 @@
             dot.addEventListener('touchstart', startDrag, { passive: false });
         });
 
-        // 新增：羽球拖拽事件綁定
-        const shuttlecock = document.getElementById('shuttlecock');
-        if (shuttlecock) {
-            shuttlecock.addEventListener('mousedown', startDrag);
-            shuttlecock.addEventListener('touchstart', startDrag, { passive: false });
-        }
-
-        // 全域事件監聽器
+        // 全域事件監聽
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('touchmove', drag, { passive: false });
         document.addEventListener('touchend', endDrag);
+
+        // 初始化位置
+        setTimeout(() => {
+            resetPlayerPositions();
+        }, 100);
     }
 
     function startDrag(e) {
@@ -1218,6 +1495,220 @@
         });
     }
 
+    // === 新增：計分板相關函數 ===
+    function initScoreboard() {
+        const tapAreaA = document.getElementById('tap-area-a');
+        const tapAreaB = document.getElementById('tap-area-b');
+        const swapBtn = document.getElementById('swap-btn');
+        const resetBtn = document.getElementById('reset-score-btn');
+
+        // 左側點擊區域事件
+        tapAreaA.addEventListener('mousedown', (e) => startLongPress('a', e));
+        tapAreaA.addEventListener('mouseup', () => endLongPress('a'));
+        tapAreaA.addEventListener('mouseleave', () => cancelLongPress());
+        tapAreaA.addEventListener('touchstart', (e) => startLongPress('a', e), { passive: false });
+        tapAreaA.addEventListener('touchend', () => endLongPress('a'));
+        tapAreaA.addEventListener('touchcancel', () => cancelLongPress());
+
+        // 右側點擊區域事件
+        tapAreaB.addEventListener('mousedown', (e) => startLongPress('b', e));
+        tapAreaB.addEventListener('mouseup', () => endLongPress('b'));
+        tapAreaB.addEventListener('mouseleave', () => cancelLongPress());
+        tapAreaB.addEventListener('touchstart', (e) => startLongPress('b', e), { passive: false });
+        tapAreaB.addEventListener('touchend', () => endLongPress('b'));
+        tapAreaB.addEventListener('touchcancel', () => cancelLongPress());
+
+        // 功能按鈕事件
+        swapBtn.addEventListener('click', swapScores);
+        resetBtn.addEventListener('click', resetScores);
+
+        // 初始化分數顯示
+        updateScoreDisplay();
+        updateGameStatus();
+    }
+
+    function startLongPress(side, e) {
+        // 如果遊戲已結束，不允許計分
+        if (gameEnded) return;
+        
+        e.preventDefault();
+        isLongPress = false;
+        
+        // 設定長按計時器 (500ms)
+        longPressTimer = setTimeout(() => {
+            isLongPress = true;
+            decreaseScore(side);
+            
+            // 觸覺回饋 (如果支援)
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        }, 500);
+    }
+
+    function endLongPress(side) {
+        // 如果遊戲已結束，不允許計分
+        if (gameEnded) return;
+        
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+        
+        // 如果不是長按，則執行加分
+        if (!isLongPress) {
+            increaseScore(side);
+        }
+        
+        isLongPress = false;
+    }
+
+    function cancelLongPress() {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+        isLongPress = false;
+    }
+
+    function increaseScore(side) {
+        // 如果遊戲已結束，不允許加分
+        if (gameEnded) return;
+        
+        if (side === 'a') {
+            scoreA++;
+        } else {
+            scoreB++;
+        }
+        
+        updateScoreDisplay();
+        checkGameEnd();
+        updateGameStatus();
+    }
+
+    function decreaseScore(side) {
+        if (side === 'a' && scoreA > 0) {
+            scoreA--;
+        } else if (side === 'b' && scoreB > 0) {
+            scoreB--;
+        }
+        
+        updateScoreDisplay();
+        
+        // 如果遊戲已結束但分數改變，重新檢查遊戲狀態
+        if (gameEnded) {
+            gameEnded = false;
+            document.getElementById('scoreboard-page').classList.remove('game-ended');
+            checkGameEnd();
+        }
+        updateGameStatus();
+    }
+
+    function updateScoreDisplay() {
+        const scoreAElement = document.getElementById('score-a');
+        const scoreBElement = document.getElementById('score-b');
+        
+        scoreAElement.textContent = scoreA;
+        scoreBElement.textContent = scoreB;
+        
+        // 移除之前的勝利樣式
+        scoreAElement.classList.remove('winner');
+        scoreBElement.classList.remove('winner');
+    }
+
+    function checkGameEnd() {
+        let winner = null;
+        
+        // 羽球21分制規則
+        if (scoreA >= 21 || scoreB >= 21) {
+            if (scoreA >= 21 && scoreB < 20) {
+                // A隊21分且B隊小於20分
+                winner = 'a';
+            } else if (scoreB >= 21 && scoreA < 20) {
+                // B隊21分且A隊小於20分
+                winner = 'b';
+            } else if (scoreA >= 20 && scoreB >= 20) {
+                // Deuce 狀態：雙方都至少20分
+                if (scoreA >= 30 || scoreB >= 30) {
+                    // 30分上限規則：先得30分者勝
+                    winner = scoreA > scoreB ? 'a' : 'b';
+                } else if (Math.abs(scoreA - scoreB) >= 2) {
+                    // 需要領先2分才能獲勝
+                    winner = scoreA > scoreB ? 'a' : 'b';
+                }
+            }
+        }
+        
+        if (winner) {
+            gameEnded = true;
+            const winnerElement = document.getElementById(`score-${winner}`);
+            winnerElement.classList.add('winner');
+            
+            // 添加遊戲結束的視覺效果
+            document.getElementById('scoreboard-page').classList.add('game-ended');
+            
+            // 觸覺回饋
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100, 50, 100]);
+            }
+        }
+    }
+
+    function updateGameStatus() {
+        const statusElement = document.getElementById('game-status');
+        
+        if (gameEnded) {
+            const winner = scoreA > scoreB ? '左隊' : '右隊';
+            statusElement.textContent = `🏆 ${winner}獲勝！`;
+            statusElement.className = 'game-status winner-announced';
+        } else if (scoreA >= 20 && scoreB >= 20) {
+            statusElement.textContent = '⚡ Deuce - 需領先2分獲勝';
+            statusElement.className = 'game-status';
+        } else if (scoreA >= 29 && scoreB >= 29) {
+            statusElement.textContent = '🔥 30分決勝局！';
+            statusElement.className = 'game-status';
+        } else {
+            statusElement.textContent = '';
+            statusElement.className = 'game-status';
+        }
+    }
+
+    function swapScores() {
+        // 交換分數
+        const tempScore = scoreA;
+        scoreA = scoreB;
+        scoreB = tempScore;
+        
+        updateScoreDisplay();
+        
+        // 如果遊戲已結束，重新檢查勝利者
+        if (gameEnded) {
+            gameEnded = false;
+            document.getElementById('scoreboard-page').classList.remove('game-ended');
+            checkGameEnd();
+        }
+        updateGameStatus();
+    }
+
+    function resetScores() {
+        if (confirm('確定要重設分數嗎？')) {
+            scoreA = 0;
+            scoreB = 0;
+            gameEnded = false;
+            
+            // 移除遊戲結束狀態
+            document.getElementById('scoreboard-page').classList.remove('game-ended');
+            
+            // 重要：移除勝利者樣式
+            document.getElementById('score-a').classList.remove('winner');
+            document.getElementById('score-b').classList.remove('winner');
+            
+            updateScoreDisplay();
+            updateGameStatus();
+        }
+    }
+    // === 計分板函數結束 ===
+
     // 分頁切換
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1241,6 +1732,7 @@
         createPlayerButtons();
         initFirebase();
         initTacticalBoard();
+        initScoreboard(); // 新增：初始化計分板
     });
 
     // 視窗大小改變時重新調整圓點位置
@@ -1254,5 +1746,9 @@
     </script>
 
 </body>
-</html>
 
+
+<footer class="score-footer">
+  © 2025 羽球小工具 · made by linin
+</footer>
+</html>
