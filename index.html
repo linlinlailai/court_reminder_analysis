@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,30 +13,30 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-        
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        
+
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 30px;
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .tabs {
             display: flex;
             margin-bottom: 30px;
             border-bottom: 2px solid #eee;
         }
-        
+
         .tab {
             flex: 1;
             padding: 15px 20px;
@@ -48,59 +49,40 @@
             border-radius: 10px 10px 0 0;
             margin-right: 5px;
         }
-        
+
         .tab.active {
             background: #667eea;
             color: white;
             transform: translateY(-2px);
         }
-        
+
         .tab-content {
             display: none;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
-        .connection-status {
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        
-        .connection-status.connected {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .connection-status.disconnected {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        
+
+
         .section {
             margin-bottom: 30px;
         }
-        
+
         .section h2 {
             color: #333;
             border-bottom: 2px solid #667eea;
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
-        
+
         .time-buttons {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 20px;
         }
-        
+
         .time-buttons button {
             padding: 12px 20px;
             border: 2px solid #667eea;
@@ -112,19 +94,19 @@
             transition: all 0.3s ease;
             position: relative;
         }
-        
+
         .time-buttons button:hover {
             background: #667eea;
             color: white;
             transform: translateY(-2px);
         }
-        
+
         .time-buttons button.active {
             background: #667eea;
             color: white;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        
+
         .time-buttons button::after {
             content: attr(data-count);
             position: absolute;
@@ -141,18 +123,18 @@
             justify-content: center;
             font-weight: bold;
         }
-        
+
         .time-buttons button[data-count="0"]::after {
             display: none;
         }
-        
+
         .player-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 30px;
         }
-        
+
         .player-grid button {
             padding: 15px;
             border: 2px solid #ddd;
@@ -163,27 +145,28 @@
             transition: all 0.3s ease;
             text-align: center;
         }
-        
+
         .player-grid button:hover {
             border-color: #667eea;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .player-grid button.assigned {
             background: #667eea;
             color: white;
             border-color: #667eea;
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        
-        .action-buttons button, .action-buttons a {
+
+        .action-buttons button,
+        .action-buttons a {
             padding: 15px 25px;
             border: none;
             border-radius: 10px;
@@ -196,37 +179,37 @@
             transition: all 0.3s ease;
             font-size: 16px;
         }
-        
+
         .copy-btn {
             background: #28a745;
             color: white;
         }
-        
+
         .copy-btn:hover {
             background: #218838;
             transform: translateY(-2px);
         }
-        
+
         .line-btn {
             background: #00c300;
             color: white;
         }
-        
+
         .line-btn:hover {
             background: #00a000;
             transform: translateY(-2px);
         }
-        
+
         .clear-btn {
             background: #dc3545;
             color: white;
         }
-        
+
         .clear-btn:hover {
             background: #c82333;
             transform: translateY(-2px);
         }
-        
+
         .output-section textarea {
             width: 100%;
             height: 200px;
@@ -238,7 +221,7 @@
             resize: vertical;
             background: #f8f9fa;
         }
-        
+
         .success-message {
             background: #d4edda;
             color: #155724;
@@ -248,137 +231,170 @@
             border: 1px solid #c3e6cb;
             display: none;
         }
-        
-        /* 儀表板樣式 */
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+
+        /* 會員查詢樣式 */
+        .membership-form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
+
+        .membership-form h2 {
+            color: #333;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            margin-bottom: 10px;
         }
-        
-        .stat-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-            opacity: 0.9;
+
+        .form-group {
+            margin-bottom: 20px;
         }
-        
-        .stat-card .stat-value {
-            font-size: 2.5em;
+
+        .form-group label {
+            display: block;
             font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .leaderboard {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        .leaderboard h3 {
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-row {
             display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .leaderboard-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            transition: background 0.3s ease;
-        }
-        
-        .leaderboard-item:hover {
-            background: #f8f9fa;
-        }
-        
-        .leaderboard-item:last-child {
-            border-bottom: none;
-        }
-        
-        .frequency-chart {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        .frequency-chart h3 {
-            color: #333;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .chart-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
             gap: 15px;
         }
-        
-        .chart-label {
-            min-width: 120px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .chart-bar {
+
+        .form-row .form-group {
             flex: 1;
-            height: 25px;
+        }
+
+        .membership-form select,
+        .membership-form input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .membership-form select:focus,
+        .membership-form input[type="text"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .membership-form input[readonly] {
             background: #f0f0f0;
-            border-radius: 12px;
+            color: #666;
+        }
+
+        .captcha-container {
+            margin-bottom: 20px;
+        }
+
+        .captcha-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .captcha-image {
+            flex: 1;
+            min-height: 50px;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            position: relative;
         }
-        
-        .chart-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #778899 0%, #D3D3D3 100%);
-            border-radius: 12px;
-            transition: width 0.8s ease;
+
+        .captcha-image img {
+            max-width: 100%;
+            height: auto;
         }
-        
-        .chart-value {
-            min-width: 30px;
-            text-align: right;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .clear-data-btn {
-            background: #dc3545;
+
+        .captcha-refresh-btn {
+            padding: 12px 15px;
+            background: #FF9800;
             color: white;
             border: none;
-            padding: 15px 25px;
             border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            display: block;
-            margin: 0 auto;
+            white-space: nowrap;
         }
-        
-        .clear-data-btn:hover {
-            background: #c82333;
+
+        .captcha-refresh-btn:hover {
+            background: #F57C00;
             transform: translateY(-2px);
+        }
+
+        .query-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .query-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .query-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .membership-result {
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .membership-result.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .membership-result.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .membership-result .expire-date {
+            font-size: 2em;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* 戰術板樣式 */
@@ -395,7 +411,7 @@
             max-width: 400px;
             background: #4CAF50;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
             aspect-ratio: 1 / 2.2;
         }
@@ -415,7 +431,7 @@
         .court-net {
             stroke: white;
             stroke-width: 3;
-            stroke-dasharray: 8,4;
+            stroke-dasharray: 8, 4;
             fill: none;
         }
 
@@ -426,7 +442,7 @@
             border-radius: 50%;
             cursor: move;
             border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s ease;
             display: flex;
             align-items: center;
@@ -463,7 +479,8 @@
         .player-dot.player4 {
             background: #9C27B0;
         }
-    /* 新增：白色菱形羽球樣式 */
+
+        /* 新增：白色菱形羽球樣式 */
         .shuttlecock {
             position: absolute;
             width: 25px;
@@ -478,14 +495,16 @@
             justify-content: center;
             font-size: 16px;
             z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            left: 85px;  /* 初始X位置 */
-            top: 200px;  /* 初始Y位置 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            left: 85px;
+            /* 初始X位置 */
+            top: 200px;
+            /* 初始Y位置 */
         }
 
         .shuttlecock:hover {
             transform: rotate(45deg) scale(1.1);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         /* 羽球內的文字要反轉回來 */
@@ -536,20 +555,20 @@
             flex-direction: column;
             height: 75vh;
             user-select: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: all 0.5s ease;
         }
 
         /* 遊戲結束時的背景變化 - 修改為淺灰色 */
         #scoreboard-page.game-ended {
             background: linear-gradient(135deg, #778899 0%, #808080 100%);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
 
         .scoreboard-header {
             text-align: center;
             padding: 20px 0;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 20px;
         }
 
@@ -571,12 +590,13 @@
         }
 
         @keyframes winnerPulse {
-            0% { 
-                transform: scale(1.2); 
+            0% {
+                transform: scale(1.2);
                 text-shadow: 0 0 30px rgba(241, 196, 15, 0.8);
             }
-            100% { 
-                transform: scale(1.3); 
+
+            100% {
+                transform: scale(1.3);
                 text-shadow: 0 0 40px rgba(241, 196, 15, 1);
             }
         }
@@ -665,7 +685,7 @@
             gap: 20px;
             justify-content: center;
             padding-top: 20px;
-            border-top: 2px solid rgba(255,255,255,0.1);
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .scoreboard-btn {
@@ -685,7 +705,7 @@
             background: rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* 遊戲狀態指示器 */
@@ -705,29 +725,34 @@
         }
 
         @keyframes statusPulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.8;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
+
         /* === 計分板樣式結束 === */
-        
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
                 margin: 10px;
             }
-            
+
             .player-grid {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 10px;
             }
-            
+
             .action-buttons {
                 flex-direction: column;
             }
-            
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-            }
+
 
             .tabs {
                 flex-direction: column;
@@ -753,7 +778,7 @@
                 font-size: 3.5em;
                 letter-spacing: 4px;
             }
-            
+
             #scoreboard-page {
                 height: 80vh;
                 padding: 15px;
@@ -775,50 +800,48 @@
             }
         }
 
-            .score-footer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                text-align: center;
-                padding: 8px 0;
-                font-size: 0.8em;
-                color: rgba(255, 255, 255, 0.6); /* 淡灰字 */
-                background-color: #2f3b4a;       /* 深藍背景 */
-                border-top: 1px solid rgba(255, 255, 255, 0.2); /* 淡灰分隔線 */
-}
-
-
-
-
-        
+        .score-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+            /* 淡灰字 */
+            background-color: #2f3b4a;
+            /* 深藍背景 */
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            /* 淡灰分隔線 */
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🏸 羽球小工具 (開發用)</h1>
-        
+
         <div class="tabs">
             <button class="tab active" onclick="showTab('generator')">通知產生器</button>
-            <button class="tab" onclick="showTab('dashboard')">打球頻率儀表板</button>
+            <button class="tab" onclick="showTab('membership')">會員查詢</button>
             <button class="tab" onclick="showTab('tactical')">戰術板</button>
             <!-- 新增：計分板按鈕 -->
             <button class="tab" onclick="showTab('scoreboard')">計分板</button>
         </div>
-        
+
         <div id="generator" class="tab-content active">
-            <div id="connectionStatus" class="connection-status disconnected">⚠️ 使用本地儲存（雲端連接失敗）</div>
-            
+
             <div class="section">
                 <h2>⏰ 選擇時間 → 🏃 點選人員 （會自動出現在該時段）</h2>
                 <div class="time-buttons" id="timeButtons"></div>
             </div>
-            
+
             <div class="section">
                 <h2>👥 選擇參與者</h2>
                 <div class="player-grid" id="playerButtons"></div>
             </div>
-            
+
             <div class="section">
                 <div class="action-buttons">
                     <button class="copy-btn" onclick="copyToClipboard()">📋 複製文字</button>
@@ -826,56 +849,59 @@
                     <button class="clear-btn" onclick="clearAll()">🧹 清空全部</button>
                 </div>
             </div>
-            
+
             <div class="section output-section">
                 <h2>📝 生成的訊息</h2>
                 <textarea id="output" readonly placeholder="請選擇時間和參與者來生成訊息"></textarea>
                 <div id="successMessage" class="success-message"></div>
             </div>
         </div>
-        
-        <div id="dashboard" class="tab-content">
-            <div id="connectionStatus2" class="connection-status disconnected">⚠️ 使用本地儲存（雲端連接失敗）</div>
-            
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <h3>總通知次數</h3>
-                    <div class="stat-value" id="totalNotifications">0</div>
+
+        <div id="membership" class="tab-content">
+            <div class="membership-form">
+                <h2>🔍 會員到期日查詢</h2>
+                <p style="color: #666; margin-bottom: 20px; text-align: center;">選擇姓名後自動帶出資料，手動填入驗證碼即可查詢</p>
+                <div class="form-group">
+                    <label>👤 選擇球員</label>
+                    <select id="memberSelect" onchange="onPlayerSelect()">
+                        <option value="">-- 請選擇 --</option>
+                    </select>
                 </div>
-                <div class="stat-card">
-                    <h3>活躍參與者</h3>
-                    <div class="stat-value" id="activeParticipants">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>最後更新</h3>
-                    <div class="stat-value" id="lastUpdate">從未</div>
-                </div>
-            </div>
-            
-            <div class="leaderboard">
-                <h3>🏆 參與排行榜 （前5名）</h3>
-                <div id="leaderboard">
-                    <div class="leaderboard-item">
-                        <span>暫無數據</span>
-                        <span>0 次</span>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🏷️ 會員編號</label>
+                        <input type="text" id="memberAccount" readonly placeholder="自動帶出">
+                    </div>
+                    <div class="form-group">
+                        <label>🔑 身分證後3碼</label>
+                        <input type="text" id="memberIdLast3" readonly placeholder="自動帶出">
                     </div>
                 </div>
-            </div>
-            
-            <div class="frequency-chart">
-                <h3>📊 個人打球頻率</h3>
-                <div id="frequencyChart">
-                    <div class="chart-item">
-                        <div class="chart-label">暫無數據</div>
-                        <div class="chart-bar">
-                            <div class="chart-fill" style="width: 0%"></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>� 生日後2碼</label>
+                        <input type="text" id="memberBirthday" maxlength="2" placeholder="例: 15" inputmode="numeric">
+                    </div>
+                    <div class="form-group">
+                        <label>📱 手機後3碼</label>
+                        <input type="text" id="memberPhone" maxlength="3" placeholder="例: 168" inputmode="numeric">
+                    </div>
+                </div>
+                <div class="captcha-container">
+                    <label>� 驗證碼</label>
+                    <div class="captcha-row">
+                        <div id="captchaImageContainer" class="captcha-image">
+                            <span style="color: #999;">請先按「載入驗證碼」</span>
                         </div>
-                        <div class="chart-value">0</div>
+                        <button class="captcha-refresh-btn" onclick="loadCaptcha()">🔄 載入驗證碼</button>
                     </div>
+                    <input type="text" id="captchaInput" placeholder="請輸入圖片中的文字（區分大小寫）">
                 </div>
+                <button class="query-btn" onclick="queryMembership()">🔍 查詢到期日</button>
+                <div id="membershipResult" class="membership-result" style="display: none;"></div>
+                <p style="color: #999; font-size: 12px; text-align: center; margin-top: 15px;">ℹ️
+                    生日和手機資料僅存在你的瀏覽器中，不會上傳到任何地方</p>
             </div>
-            
-            <button class="clear-data-btn" onclick="clearAllData()">🗑️ 清除所有統計資料</button>
         </div>
 
         <div id="tactical" class="tab-content">
@@ -884,36 +910,36 @@
                     <h2>🏸 羽球戰術板</h2>
                     <p>拖拽圓點來討論戰術 • 四個圓點代表四名球員</p>
                 </div>
-                
+
                 <div class="court-container" id="courtContainer">
                     <svg class="court-svg" viewBox="0 0 200 440" xmlns="http://www.w3.org/2000/svg">
                         <!-- 外圍邊界線 (雙打) -->
-                        <rect x="10" y="10" width="180" height="420" class="court-line"/>
-                        
-                        <!-- 單打邊界線 (左右兩側) -->
-                        <line x1="25" y1="10" x2="25" y2="430" class="court-line"/>
-                        <line x1="175" y1="10" x2="175" y2="430" class="court-line"/>
-                        
-                        <!-- 上半場發球線 -->
-                        <line x1="10" y1="260" x2="190" y2="260" class="court-line"/>
-                        
-                        <!-- 下半場發球線 -->
-                        <line x1="10" y1="180" x2="190" y2="180" class="court-line"/>
+                        <rect x="10" y="10" width="180" height="420" class="court-line" />
 
-                         <!-- 上半場底線 -->
-                        <line x1="10" y1="410" x2="190" y2="410" class="court-line"/>
-                        
+                        <!-- 單打邊界線 (左右兩側) -->
+                        <line x1="25" y1="10" x2="25" y2="430" class="court-line" />
+                        <line x1="175" y1="10" x2="175" y2="430" class="court-line" />
+
+                        <!-- 上半場發球線 -->
+                        <line x1="10" y1="260" x2="190" y2="260" class="court-line" />
+
+                        <!-- 下半場發球線 -->
+                        <line x1="10" y1="180" x2="190" y2="180" class="court-line" />
+
+                        <!-- 上半場底線 -->
+                        <line x1="10" y1="410" x2="190" y2="410" class="court-line" />
+
                         <!-- 下半場底線 -->
-                        <line x1="10" y1="30" x2="190" y2="30" class="court-line"/>
-                        
+                        <line x1="10" y1="30" x2="190" y2="30" class="court-line" />
+
                         <!-- 中線 (分隔左右發球區) -->
-                        <line x1="100" y1="260" x2="100" y2="430" class="court-line"/>
-                        <line x1="100" y1="10" x2="100" y2="180" class="court-line"/>
-                        
+                        <line x1="100" y1="260" x2="100" y2="430" class="court-line" />
+                        <line x1="100" y1="10" x2="100" y2="180" class="court-line" />
+
                         <!-- 網子 (虛線) -->
-                        <line x1="10" y1="220" x2="190" y2="220" class="court-net"/>
+                        <line x1="10" y1="220" x2="190" y2="220" class="court-net" />
                     </svg>
-                    
+
                     <!-- 球員圓點 -->
                     <div class="player-dot player1" id="player1" data-player="1">1</div>
                     <div class="player-dot player2" id="player2" data-player="2">2</div>
@@ -923,7 +949,7 @@
                     <!-- 新增：白色菱形羽球 -->
                     <div class="shuttlecock" id="shuttlecock" data-player="shuttlecock"> </div>
                 </div>
-                
+
                 <div class="tactical-controls">
                     <button class="reset-btn" onclick="resetPlayerPositions()">🔄 重置位置</button>
                 </div>
@@ -952,804 +978,651 @@
     </div>
 
     <script>
-    // Firebase 設定
-    const firebaseConfig = {
-        apiKey: "AIzaSyCVOPme4I2DqEu6OGen7D_qVQgpEnT6R7E",
-        authDomain: "court-test-e7de7.firebaseapp.com",
-        databaseURL: "https://court-test-e7de7-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "court-test-e7de7"
-    };
+        // 全域變數
+        const times = ["18:00", "18:30", "19:00", "19:30", "20:00"];
+        let selectedTime = null;
+        const assignments = {};
+        const playerStatus = {};
 
-    // 全域變數
-    const times = ["18:00", "18:30", "19:00", "19:30", "20:00"];
-    let selectedTime = null;
-    const assignments = {};
-    const playerStatus = {};
-    let isFirebaseConnected = false;
-    let database = null;
 
-    const players = [
-        { id: "CK17583蔡佳佑483", label: "佳佑 Arvin" },
-        { id: "CK17671賴韋伶052", label: "韋伶 Lynn" },
-        { id: "CK17711楊家榮791", label: "家榮 Barry" },
-        { id: "CK17824陳毅庭705", label: "毅庭 Eden" },
-        { id: "CK17759陳冠勳033", label: "冠勳 Andersen" },
-        { id: "CK17778包國宏063", label: "國宏 Luke" },
-        { id: "CK17801劉庭宇161", label: "庭宇 Ben" },
-        { id: "CK17678廖顯德467", label: "顯德 Jerry" },
-        { id: "CK17792張嘉聞531", label: "嘉聞 ChiaWen" },
-        { id: "CK17718張富翔492", label: "富翔 Oscar" },
-        { id: "CK17795王冠翔436", label: "冠翔 Damien" },
-        { id: "CK17793方  煒218", label: "方煒 Tony" },
-        { id: "CK17812林杰凱808", label: "杰凱 Adam" },
-        { id: "CK17670吳政宇936", label: "政宇 Dennis" },
-        { id: "CK17509曾宇溢406", label: "宇溢 Eugene" },
-        { id: "CK17630詹鈞貿628", label: "鈞貿 CM" },
-        { id: "CK17556白承偉687", label: "小白 Chuck" },
-        { id: "CK17657林楊凱196", label: "楊凱 Zack" },
-        { id: "CK17815蔡佳宏079", label: "佳宏 Ian" },
-        { id: "CK17724謝德慶104", label: "德慶 Lantis" },
-        { id: "CK17835江嘉胤094", label: "嘉胤 John" },
-        { id: "CF32054林宗翰314", label: "宗翰" },
-        { id: "CS15024林瑋青552", label: "瑋青" },
-        { id: "CS15072陳煜瑋128", label: "煜瑋 Benson" }
-    ];
+        const players = [
+            { id: "CK17583蔡佳佑483", label: "佳佑 Arvin" },
+            { id: "CK17671賴韋伶052", label: "韋伶 Lynn" },
+            { id: "CK17711楊家榮791", label: "家榮 Barry" },
+            { id: "CK17824陳毅庭705", label: "毅庭 Eden" },
+            { id: "CK17759陳冠勳033", label: "冠勳 Andersen" },
+            { id: "CK17778包國宏063", label: "國宏 Luke" },
+            { id: "CK17801劉庭宇161", label: "庭宇 Ben" },
+            { id: "CK17678廖顯德467", label: "顯德 Jerry" },
+            { id: "CK17792張嘉聞531", label: "嘉聞 ChiaWen" },
+            { id: "CK17718張富翔492", label: "富翔 Oscar" },
+            { id: "CK17795王冠翔436", label: "冠翔 Damien" },
+            { id: "CK17793方  煒218", label: "方煒 Tony" },
+            { id: "CK17812林杰凱808", label: "杰凱 Adam" },
+            { id: "CK17670吳政宇936", label: "政宇 Dennis" },
+            { id: "CK17509曾宇溢406", label: "宇溢 Eugene" },
+            { id: "CK17630詹鈞貿628", label: "鈞貿 CM" },
+            { id: "CK17556白承偉687", label: "小白 Chuck" },
+            { id: "CK17657林楊凱196", label: "楊凱 Zack" },
+            { id: "CK17815蔡佳宏079", label: "佳宏 Ian" },
+            { id: "CK17724謝德慶104", label: "德慶 Lantis" },
+            { id: "CK17835江嘉胤094", label: "嘉胤 John" },
+            { id: "CF32054林宗翰314", label: "宗翰" },
+            { id: "CS15024林瑋青552", label: "瑋青" },
+            { id: "CS15072陳煜瑋128", label: "煜瑋 Benson" }
+        ];
 
-    // 戰術板相關變數
-    let isDragging = false;
-    let currentDragElement = null;
-    let dragOffset = { x: 0, y: 0 };
+        // 戰術板相關變數
+        let isDragging = false;
+        let currentDragElement = null;
+        let dragOffset = { x: 0, y: 0 };
 
-    // 初始球員位置 (百分比)
-    const initialPositions = {
-        player1: { x: 30, y: 75 },  // 下半場左側
-        player2: { x: 70, y: 75 },  // 下半場右側
-        player3: { x: 30, y: 25 },  // 上半場左側
-        player4: { x: 70, y: 25 },   // 上半場右側
-        shuttlecock: { x: 50, y: 50 }  // 新增羽球初始位置
-    };
-
-    // === 新增：計分板相關變數 ===
-    let scoreA = 0;
-    let scoreB = 0;
-    let gameEnded = false;
-    let longPressTimer = null;
-    let isLongPress = false;
-
-    // 初始化 Firebase
-    async function initFirebase() {
-        try {
-            const firebaseApp = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js');
-            const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-            
-            const app = firebaseApp.initializeApp(firebaseConfig);
-            database = firebaseDatabase.getDatabase(app);
-            
-            const testRef = firebaseDatabase.ref(database, 'test');
-            await firebaseDatabase.set(testRef, { timestamp: Date.now() });
-            
-            isFirebaseConnected = true;
-            updateConnectionStatus(true);
-            loadDashboardData();
-        } catch (error) {
-            console.error('Firebase 連接失敗:', error);
-            isFirebaseConnected = false;
-            updateConnectionStatus(false);
-            loadLocalData();
-        }
-    }
-
-    // 更新連接狀態
-    function updateConnectionStatus(connected) {
-        const statusElements = [document.getElementById('connectionStatus'), document.getElementById('connectionStatus2')];
-        statusElements.forEach(statusElement => {
-            if (connected) {
-                statusElement.className = 'connection-status connected';
-                statusElement.textContent = '✅ 已連接雲端數據庫';
-            } else {
-                statusElement.className = 'connection-status disconnected';
-                statusElement.textContent = '⚠️ 使用本地儲存（雲端連接失敗）';
-            }
-        });
-    }
-
-    // 建立時間按鈕
-    function createTimeButtons() {
-        const timeButtonsDiv = document.getElementById("timeButtons");
-        times.forEach(time => {
-            const btn = document.createElement("button");
-            btn.textContent = time;
-            btn.onclick = () => {
-                selectedTime = time;
-                document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-            };
-            timeButtonsDiv.appendChild(btn);
-        });
-    }
-
-    // 建立人員按鈕
-    function createPlayerButtons() {
-        const playerButtonsDiv = document.getElementById("playerButtons");
-        players.forEach(player => {
-            const btn = document.createElement("button");
-            btn.textContent = player.label;
-            btn.onclick = () => {
-                if (!selectedTime) {
-                    alert("請先選擇一個時段！");
-                    return;
-                }
-
-                if (playerStatus[player.id] === selectedTime) {
-                    assignments[selectedTime] = assignments[selectedTime].filter(id => id !== player.id);
-                    delete playerStatus[player.id];
-                } else {
-                    if (playerStatus[player.id]) {
-                        const oldTime = playerStatus[player.id];
-                        assignments[oldTime] = assignments[oldTime].filter(id => id !== player.id);
-                    }
-                    playerStatus[player.id] = selectedTime;
-                    if (!assignments[selectedTime]) assignments[selectedTime] = [];
-                    assignments[selectedTime].push(player.id);
-                }
-                updatePlayerButtons();
-                updateOutput();
-            };
-            btn.id = "btn_" + player.id;
-            playerButtonsDiv.appendChild(btn);
-        });
-    }
-
-    // 更新人員按鈕狀態
-    function updatePlayerButtons() {
-        players.forEach(player => {
-            const btn = document.getElementById("btn_" + player.id);
-            if (playerStatus[player.id]) {
-                btn.classList.add("assigned");
-                btn.textContent = player.label + ` ✅ (${playerStatus[player.id]})`;
-            } else {
-                btn.classList.remove("assigned");
-                btn.textContent = player.label;
-            }
-        });
-    }
-
-    // 更新輸出訊息
-    function updateOutput() {
-        let message = "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD\n";
-        const sortedTimes = Object.keys(assignments).sort();
-        sortedTimes.forEach(time => {
-            if (assignments[time] && assignments[time].length > 0) {
-                message += time + "\n";
-                assignments[time].forEach(playerId => {
-                    message += playerId + "\n";
-                });
-            }
-        });
-        document.getElementById("output").value = message.trim();
-    }
-
-    // 複製到剪貼簿
-    async function copyToClipboard() {
-        const output = document.getElementById("output");
-        const message = output.value;
-        
-        if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
-            alert("目前沒有產生的訊息可以複製！");
-            return;
-        }
-        
-        try {
-            await navigator.clipboard.writeText(message);
-            showSuccessMessage("已複製到剪貼簿！");
-            await recordCourtData();
-        } catch (err) {
-            output.select();
-            document.execCommand("copy");
-            showSuccessMessage("已複製到剪貼簿！");
-            await recordCourtData();
-        }
-    }
-
-    // 分享到 LINE
-    async function shareToLine() {
-        const message = document.getElementById("output").value;
-        if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
-            alert("目前沒有產生的訊息可以分享！");
-            return;
-        }
-        
-        const url = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
-        window.open(url);
-        await recordCourtData();
-    }
-
-    // 清空全部
-    function clearAll() {
-        selectedTime = null;
-        for (const key in assignments) delete assignments[key];
-        for (const key in playerStatus) delete playerStatus[key];
-        updatePlayerButtons();
-        document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
-        document.getElementById("output").value = "";
-        showSuccessMessage("已清空所有選擇");
-    }
-
-    // 顯示成功訊息
-    function showSuccessMessage(message) {
-        const messageDiv = document.getElementById("successMessage");
-        messageDiv.className = "success-message";
-        messageDiv.textContent = message;
-        messageDiv.style.display = "block";
-        setTimeout(() => { messageDiv.style.display = "none"; }, 3000);
-    }
-
-    // === 恢復原始的統計邏輯 ===
-    function updateStatistics(stats, oldParticipants, newParticipants) {
-        const oldSet = new Set(oldParticipants);
-        const newSet = new Set(newParticipants);
-
-        const added = newParticipants.filter(p => !oldSet.has(p));
-        const removed = oldParticipants.filter(p => !newSet.has(p));
-
-        added.forEach(participantId => {
-            const playerName = players.find(p => p.id === participantId)?.label || participantId;
-            const key = participantId.replace(/[.#$[\]]/g, '_');
-            if (stats[key]) {
-                stats[key].count = (stats[key].count || 0) + 1;
-            } else {
-                stats[key] = { name: playerName, count: 1 };
-            }
-        });
-
-        removed.forEach(participantId => {
-            const key = participantId.replace(/[.#$[\]]/g, '_');
-            if (stats[key] && stats[key].count > 0) {
-                stats[key].count -= 1;
-                if (stats[key].count <= 0) {
-                    delete stats[key];
-                }
-            }
-        });
-        return stats;
-    }
-
-    // === 恢復原始的記錄打球數據邏輯 ===
-    async function recordCourtData() {
-        const today = new Date().toISOString().split('T')[0];
-        const newParticipants = Object.values(assignments).flat();
-        
-        if (newParticipants.length === 0) return;
-
-        const data = {
-            date: today,
-            participants: newParticipants,
-            timestamp: new Date().toISOString()
+        // 初始球員位置 (百分比)
+        const initialPositions = {
+            player1: { x: 30, y: 75 },  // 下半場左側
+            player2: { x: 70, y: 75 },  // 下半場右側
+            player3: { x: 30, y: 25 },  // 上半場左側
+            player4: { x: 70, y: 25 },   // 上半場右側
+            shuttlecock: { x: 50, y: 50 }  // 新增羽球初始位置
         };
 
-        if (isFirebaseConnected) {
-            try {
-                const { ref, set, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                
-                const courtRef = ref(database, `court_reminders/${today}`);
-                const statsRef = ref(database, 'statistics');
+        // === 新增：計分板相關變數 ===
+        let scoreA = 0;
+        let scoreB = 0;
+        let gameEnded = false;
+        let longPressTimer = null;
+        let isLongPress = false;
 
-                const [courtSnapshot, statsSnapshot] = await Promise.all([get(courtRef), get(statsRef)]);
-                
-                const existingData = courtSnapshot.val();
-                const currentStats = statsSnapshot.val() || {};
-                
-                const oldParticipants = existingData ? existingData.participants : [];
-                const updatedStats = updateStatistics(currentStats, oldParticipants, newParticipants);
 
-                await set(courtRef, data);
-                await set(statsRef, updatedStats);
-                
-                loadDashboardData();
-            } catch (error) {
-                console.error('Firebase 寫入失敗:', error);
-                recordLocalData(data);
-            }
-        } else {
-            recordLocalData(data);
-        }
-    }
 
-    // === 恢復原始的記錄本地數據邏輯 ===
-    function recordLocalData(data) {
-        try {
-            const today = data.date;
-            const newParticipants = data.participants;
-
-            const courtData = JSON.parse(localStorage.getItem('courtReminders') || '{}');
-            const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
-
-            const existingData = courtData[today];
-            const oldParticipants = existingData ? existingData.participants : [];
-            
-            const updatedStats = updateStatistics(stats, oldParticipants, newParticipants);
-
-            courtData[today] = data;
-            localStorage.setItem('courtReminders', JSON.stringify(courtData));
-            localStorage.setItem('courtStatistics', JSON.stringify(updatedStats));
-            
-            loadDashboardData();
-        } catch (error) {
-            console.error('本地儲存失敗:', error);
-        }
-    }
-
-    // 載入儀表板數據
-    async function loadDashboardData() {
-        if (isFirebaseConnected) {
-            await loadFirebaseData();
-        } else {
-            loadLocalData();
-        }
-    }
-
-    // === 修正：載入 Firebase 數據並正確計算總通知次數 ===
-    async function loadFirebaseData() {
-        try {
-            const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-            const statsRef = ref(database, 'statistics');
-            const remindersRef = ref(database, 'court_reminders');
-            
-            const [statsSnapshot, remindersSnapshot] = await Promise.all([get(statsRef), get(remindersRef)]);
-            
-            const stats = statsSnapshot.exists() ? statsSnapshot.val() : {};
-            const reminders = remindersSnapshot.exists() ? remindersSnapshot.val() : {};
-            
-            updateDashboard(stats, reminders);
-        } catch (error) {
-            console.error('載入 Firebase 數據失敗:', error);
-            loadLocalData();
-        }
-    }
-
-    // === 修正：載入本地數據並正確計算總通知次數 ===
-    function loadLocalData() {
-        try {
-            const stats = JSON.parse(localStorage.getItem('courtStatistics') || '{}');
-            const reminders = JSON.parse(localStorage.getItem('courtReminders') || '{}');
-            updateDashboard(stats, reminders);
-        } catch (error) {
-            console.error('載入本地數據失敗:', error);
-            updateDashboard({}, {});
-        }
-    }
-
-    // === 修正：更新儀表板顯示，正確計算總通知次數 ===
-    function updateDashboard(stats, reminders) {
-        // 總通知次數 = 有產生通知的天數（court_reminders 的鍵值數量）
-        const totalNotifications = Object.keys(reminders).length;
-        const activeParticipants = Object.keys(stats).length;
-        
-        document.getElementById('totalNotifications').textContent = totalNotifications;
-        document.getElementById('activeParticipants').textContent = activeParticipants;
-        
-        const lastUpdate = totalNotifications > 0 ? new Date().toLocaleDateString('zh-TW') : '從未';
-        document.getElementById('lastUpdate').textContent = lastUpdate;
-
-        updateLeaderboard(stats);
-        updateFrequencyChart(stats);
-    }
-
-    // 更新排行榜
-    function updateLeaderboard(stats) {
-        const leaderboard = document.getElementById('leaderboard');
-        const sortedPlayers = Object.entries(stats)
-            .map(([key, data]) => ({ name: data.name, count: data.count }))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 5);
-
-        if (sortedPlayers.length === 0) {
-            leaderboard.innerHTML = '<div class="leaderboard-item"><span>暫無數據</span><span>0 次</span></div>';
-            return;
+        // 建立時間按鈕
+        function createTimeButtons() {
+            const timeButtonsDiv = document.getElementById("timeButtons");
+            times.forEach(time => {
+                const btn = document.createElement("button");
+                btn.textContent = time;
+                btn.onclick = () => {
+                    selectedTime = time;
+                    document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                };
+                timeButtonsDiv.appendChild(btn);
+            });
         }
 
-        leaderboard.innerHTML = sortedPlayers
-            .map(player => `<div class="leaderboard-item"><span>${player.name}</span><span>${player.count} 次</span></div>`)
-            .join('');
-    }
+        // 建立人員按鈕
+        function createPlayerButtons() {
+            const playerButtonsDiv = document.getElementById("playerButtons");
+            players.forEach(player => {
+                const btn = document.createElement("button");
+                btn.textContent = player.label;
+                btn.onclick = () => {
+                    if (!selectedTime) {
+                        alert("請先選擇一個時段！");
+                        return;
+                    }
 
-    // 更新頻率圖表
-    function updateFrequencyChart(stats) {
-        const chart = document.getElementById('frequencyChart');
-        const sortedPlayers = Object.entries(stats)
-            .map(([key, data]) => ({ name: data.name, count: data.count }))
-            .sort((a, b) => b.count - a.count);
-
-        if (sortedPlayers.length === 0) {
-            chart.innerHTML = '<div class="chart-item"><div class="chart-label">暫無數據</div><div class="chart-bar"><div class="chart-fill" style="width: 0%"></div></div><div class="chart-value">0</div></div>';
-            return;
+                    if (playerStatus[player.id] === selectedTime) {
+                        assignments[selectedTime] = assignments[selectedTime].filter(id => id !== player.id);
+                        delete playerStatus[player.id];
+                    } else {
+                        if (playerStatus[player.id]) {
+                            const oldTime = playerStatus[player.id];
+                            assignments[oldTime] = assignments[oldTime].filter(id => id !== player.id);
+                        }
+                        playerStatus[player.id] = selectedTime;
+                        if (!assignments[selectedTime]) assignments[selectedTime] = [];
+                        assignments[selectedTime].push(player.id);
+                    }
+                    updatePlayerButtons();
+                    updateOutput();
+                };
+                btn.id = "btn_" + player.id;
+                playerButtonsDiv.appendChild(btn);
+            });
         }
 
-        const maxCount = Math.max(...sortedPlayers.map(p => p.count));
-        
-        chart.innerHTML = sortedPlayers
-            .map(player => {
-                const percentage = maxCount > 0 ? (player.count / maxCount) * 100 : 0;
-                return `
-                    <div class="chart-item">
-                        <div class="chart-label">${player.name}</div>
-                        <div class="chart-bar">
-                            <div class="chart-fill" style="width: ${percentage}%"></div>
-                        </div>
-                        <div class="chart-value">${player.count}</div>
-                    </div>
-                `;
-            })
-            .join('');
-    }
-
-    // 清除所有統計資料
-    async function clearAllData() {
-        if (!confirm('確定要清除所有統計資料嗎？此操作無法復原！')) {
-            return;
-        }
-
-        if (isFirebaseConnected) {
-            try {
-                const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js');
-                const statsRef = ref(database, 'statistics');
-                const remindersRef = ref(database, 'court_reminders');
-                
-                await Promise.all([remove(statsRef), remove(remindersRef)]);
-                showSuccessMessage('雲端統計資料已清除');
-            } catch (error) {
-                console.error('清除雲端數據失敗:', error);
-                showSuccessMessage('清除雲端數據失敗，請稍後再試');
-            }
-        }
-
-        // 清除本地數據
-        localStorage.removeItem('courtReminders');
-        localStorage.removeItem('courtStatistics');
-
-        updateDashboard({}, {});
-        showSuccessMessage('本地統計資料已清除');
-    }
-
-    // 戰術板初始化
-    function initTacticalBoard() {
-        const playerDots = document.querySelectorAll('.player-dot, .shuttlecock');
-        
-        playerDots.forEach(dot => {
-            // 滑鼠事件
-            dot.addEventListener('mousedown', startDrag);
-            
-            // 觸控事件
-            dot.addEventListener('touchstart', startDrag, { passive: false });
-        });
-
-        // 全域事件監聽
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', endDrag);
-        document.addEventListener('touchmove', drag, { passive: false });
-        document.addEventListener('touchend', endDrag);
-
-        // 初始化位置
-        setTimeout(() => {
-            resetPlayerPositions();
-        }, 100);
-    }
-
-    function startDrag(e) {
-        e.preventDefault();
-        isDragging = true;
-        currentDragElement = e.target;
-        currentDragElement.classList.add('dragging');
-
-        const rect = document.getElementById('courtContainer').getBoundingClientRect();
-        const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-        dragOffset.x = clientX - rect.left - (currentDragElement.offsetLeft + currentDragElement.offsetWidth / 2);
-        dragOffset.y = clientY - rect.top - (currentDragElement.offsetTop + currentDragElement.offsetHeight / 2);
-    }
-
-    function drag(e) {
-        if (!isDragging || !currentDragElement) return;
-        e.preventDefault();
-
-        const rect = document.getElementById('courtContainer').getBoundingClientRect();
-        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-        let x = clientX - rect.left - dragOffset.x - currentDragElement.offsetWidth / 2;
-        let y = clientY - rect.top - dragOffset.y - currentDragElement.offsetHeight / 2;
-
-        // 邊界檢測
-        const maxX = rect.width - currentDragElement.offsetWidth;
-        const maxY = rect.height - currentDragElement.offsetHeight;
-
-        x = Math.max(0, Math.min(x, maxX));
-        y = Math.max(0, Math.min(y, maxY));
-
-        currentDragElement.style.left = x + 'px';
-        currentDragElement.style.top = y + 'px';
-    }
-
-    function endDrag() {
-        if (currentDragElement) {
-            currentDragElement.classList.remove('dragging');
-        }
-        isDragging = false;
-        currentDragElement = null;
-    }
-
-    function resetPlayerPositions() {
-        const courtContainer = document.getElementById('courtContainer');
-        const rect = courtContainer.getBoundingClientRect();
-
-        Object.keys(initialPositions).forEach(playerId => {
-            const dot = document.getElementById(playerId);
-            const pos = initialPositions[playerId];
-            
-            // 計算實際位置（考慮圓點大小）
-            const x = (pos.x / 100) * rect.width - dot.offsetWidth / 2;
-            const y = (pos.y / 100) * rect.height - dot.offsetHeight / 2;
-            
-            dot.style.left = Math.max(0, Math.min(x, rect.width - dot.offsetWidth)) + 'px';
-            dot.style.top = Math.max(0, Math.min(y, rect.height - dot.offsetHeight)) + 'px';
-        });
-    }
-
-    // === 新增：計分板相關函數 ===
-    function initScoreboard() {
-        const tapAreaA = document.getElementById('tap-area-a');
-        const tapAreaB = document.getElementById('tap-area-b');
-        const swapBtn = document.getElementById('swap-btn');
-        const resetBtn = document.getElementById('reset-score-btn');
-
-        // 左側點擊區域事件
-        tapAreaA.addEventListener('mousedown', (e) => startLongPress('a', e));
-        tapAreaA.addEventListener('mouseup', () => endLongPress('a'));
-        tapAreaA.addEventListener('mouseleave', () => cancelLongPress());
-        tapAreaA.addEventListener('touchstart', (e) => startLongPress('a', e), { passive: false });
-        tapAreaA.addEventListener('touchend', () => endLongPress('a'));
-        tapAreaA.addEventListener('touchcancel', () => cancelLongPress());
-
-        // 右側點擊區域事件
-        tapAreaB.addEventListener('mousedown', (e) => startLongPress('b', e));
-        tapAreaB.addEventListener('mouseup', () => endLongPress('b'));
-        tapAreaB.addEventListener('mouseleave', () => cancelLongPress());
-        tapAreaB.addEventListener('touchstart', (e) => startLongPress('b', e), { passive: false });
-        tapAreaB.addEventListener('touchend', () => endLongPress('b'));
-        tapAreaB.addEventListener('touchcancel', () => cancelLongPress());
-
-        // 功能按鈕事件
-        swapBtn.addEventListener('click', swapScores);
-        resetBtn.addEventListener('click', resetScores);
-
-        // 初始化分數顯示
-        updateScoreDisplay();
-        updateGameStatus();
-    }
-
-    function startLongPress(side, e) {
-        // 如果遊戲已結束，不允許計分
-        if (gameEnded) return;
-        
-        e.preventDefault();
-        isLongPress = false;
-        
-        // 設定長按計時器 (500ms)
-        longPressTimer = setTimeout(() => {
-            isLongPress = true;
-            decreaseScore(side);
-            
-            // 觸覺回饋 (如果支援)
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
-        }, 500);
-    }
-
-    function endLongPress(side) {
-        // 如果遊戲已結束，不允許計分
-        if (gameEnded) return;
-        
-        if (longPressTimer) {
-            clearTimeout(longPressTimer);
-            longPressTimer = null;
-        }
-        
-        // 如果不是長按，則執行加分
-        if (!isLongPress) {
-            increaseScore(side);
-        }
-        
-        isLongPress = false;
-    }
-
-    function cancelLongPress() {
-        if (longPressTimer) {
-            clearTimeout(longPressTimer);
-            longPressTimer = null;
-        }
-        isLongPress = false;
-    }
-
-    function increaseScore(side) {
-        // 如果遊戲已結束，不允許加分
-        if (gameEnded) return;
-        
-        if (side === 'a') {
-            scoreA++;
-        } else {
-            scoreB++;
-        }
-        
-        updateScoreDisplay();
-        checkGameEnd();
-        updateGameStatus();
-    }
-
-    function decreaseScore(side) {
-        if (side === 'a' && scoreA > 0) {
-            scoreA--;
-        } else if (side === 'b' && scoreB > 0) {
-            scoreB--;
-        }
-        
-        updateScoreDisplay();
-        
-        // 如果遊戲已結束但分數改變，重新檢查遊戲狀態
-        if (gameEnded) {
-            gameEnded = false;
-            document.getElementById('scoreboard-page').classList.remove('game-ended');
-            checkGameEnd();
-        }
-        updateGameStatus();
-    }
-
-    function updateScoreDisplay() {
-        const scoreAElement = document.getElementById('score-a');
-        const scoreBElement = document.getElementById('score-b');
-        
-        scoreAElement.textContent = scoreA;
-        scoreBElement.textContent = scoreB;
-        
-        // 移除之前的勝利樣式
-        scoreAElement.classList.remove('winner');
-        scoreBElement.classList.remove('winner');
-    }
-
-    function checkGameEnd() {
-        let winner = null;
-        
-        // 羽球21分制規則
-        if (scoreA >= 21 || scoreB >= 21) {
-            if (scoreA >= 21 && scoreB < 20) {
-                // A隊21分且B隊小於20分
-                winner = 'a';
-            } else if (scoreB >= 21 && scoreA < 20) {
-                // B隊21分且A隊小於20分
-                winner = 'b';
-            } else if (scoreA >= 20 && scoreB >= 20) {
-                // Deuce 狀態：雙方都至少20分
-                if (scoreA >= 30 || scoreB >= 30) {
-                    // 30分上限規則：先得30分者勝
-                    winner = scoreA > scoreB ? 'a' : 'b';
-                } else if (Math.abs(scoreA - scoreB) >= 2) {
-                    // 需要領先2分才能獲勝
-                    winner = scoreA > scoreB ? 'a' : 'b';
+        // 更新人員按鈕狀態
+        function updatePlayerButtons() {
+            players.forEach(player => {
+                const btn = document.getElementById("btn_" + player.id);
+                if (playerStatus[player.id]) {
+                    btn.classList.add("assigned");
+                    btn.textContent = player.label + ` ✅ (${playerStatus[player.id]})`;
+                } else {
+                    btn.classList.remove("assigned");
+                    btn.textContent = player.label;
                 }
+            });
+        }
+
+        // 更新輸出訊息
+        function updateOutput() {
+            let message = "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD\n";
+            const sortedTimes = Object.keys(assignments).sort();
+            sortedTimes.forEach(time => {
+                if (assignments[time] && assignments[time].length > 0) {
+                    message += time + "\n";
+                    assignments[time].forEach(playerId => {
+                        message += playerId + "\n";
+                    });
+                }
+            });
+            document.getElementById("output").value = message.trim();
+        }
+
+        // 複製到剪貼簿
+        async function copyToClipboard() {
+            const output = document.getElementById("output");
+            const message = output.value;
+
+            if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
+                alert("目前沒有產生的訊息可以複製！");
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(message);
+                showSuccessMessage("已複製到剪貼簿！");
+            } catch (err) {
+                output.select();
+                document.execCommand("copy");
+                showSuccessMessage("已複製到剪貼簿！");
             }
         }
-        
-        if (winner) {
-            gameEnded = true;
-            const winnerElement = document.getElementById(`score-${winner}`);
-            winnerElement.classList.add('winner');
-            
-            // 添加遊戲結束的視覺效果
-            document.getElementById('scoreboard-page').classList.add('game-ended');
-            
-            // 觸覺回饋
-            if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100, 50, 100]);
+
+        // 分享到 LINE
+        async function shareToLine() {
+            const message = document.getElementById("output").value;
+            if (!message || message === "麻煩14:00幫忙一起搶場地\n03-560-1068\n場地預約順序ABCD") {
+                alert("目前沒有產生的訊息可以分享！");
+                return;
+            }
+
+            const url = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+            window.open(url);
+        }
+
+        // 清空全部
+        function clearAll() {
+            selectedTime = null;
+            for (const key in assignments) delete assignments[key];
+            for (const key in playerStatus) delete playerStatus[key];
+            updatePlayerButtons();
+            document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
+            document.getElementById("output").value = "";
+            showSuccessMessage("已清空所有選擇");
+        }
+
+        // 顯示成功訊息
+        function showSuccessMessage(message) {
+            const messageDiv = document.getElementById("successMessage");
+            messageDiv.className = "success-message";
+            messageDiv.textContent = message;
+            messageDiv.style.display = "block";
+            setTimeout(() => { messageDiv.style.display = "none"; }, 3000);
+        }
+
+        // === 會員查詢相關函數 ===
+        const WORKER_URL = 'https://gym-query.linlinlailai.workers.dev';
+        let currentSessionId = null;
+
+        function initMembershipTab() {
+            const select = document.getElementById('memberSelect');
+            players.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player.id;
+                option.textContent = player.label;
+                select.appendChild(option);
+            });
+        }
+
+        function parsePlayerId(playerId) {
+            const match = playerId.match(/^([A-Z]{2}\d{5}).+(\d{3})$/);
+            if (match) return { account: match[1], idLast3: match[2] };
+            return { account: '', idLast3: '' };
+        }
+
+        function onPlayerSelect() {
+            const select = document.getElementById('memberSelect');
+            const playerId = select.value;
+            if (!playerId) {
+                document.getElementById('memberAccount').value = '';
+                document.getElementById('memberIdLast3').value = '';
+                document.getElementById('memberBirthday').value = '';
+                document.getElementById('memberPhone').value = '';
+                return;
+            }
+            const { account, idLast3 } = parsePlayerId(playerId);
+            document.getElementById('memberAccount').value = account;
+            document.getElementById('memberIdLast3').value = idLast3;
+
+            // 從 localStorage 載入儲存的資料
+            const saved = JSON.parse(localStorage.getItem('memberData') || '{}');
+            if (saved[playerId]) {
+                document.getElementById('memberBirthday').value = saved[playerId].birthday || '';
+                document.getElementById('memberPhone').value = saved[playerId].phone || '';
+            } else {
+                document.getElementById('memberBirthday').value = '';
+                document.getElementById('memberPhone').value = '';
             }
         }
-    }
 
-    function updateGameStatus() {
-        const statusElement = document.getElementById('game-status');
-        
-        if (gameEnded) {
-            const winner = scoreA > scoreB ? '左隊' : '右隊';
-            statusElement.textContent = `🏆 ${winner}獲勝！`;
-            statusElement.className = 'game-status winner-announced';
-        } else if (scoreA >= 20 && scoreB >= 20) {
-            statusElement.textContent = '⚡ Deuce - 需領先2分獲勝';
-            statusElement.className = 'game-status';
-        } else if (scoreA >= 29 && scoreB >= 29) {
-            statusElement.textContent = '🔥 30分決勝局！';
-            statusElement.className = 'game-status';
-        } else {
-            statusElement.textContent = '';
-            statusElement.className = 'game-status';
+        function saveMemberData(playerId, birthday, phone) {
+            const saved = JSON.parse(localStorage.getItem('memberData') || '{}');
+            saved[playerId] = { birthday, phone };
+            localStorage.setItem('memberData', JSON.stringify(saved));
         }
-    }
 
-    function swapScores() {
-        // 交換分數
-        const tempScore = scoreA;
-        scoreA = scoreB;
-        scoreB = tempScore;
-        
-        updateScoreDisplay();
-        
-        // 如果遊戲已結束，重新檢查勝利者
-        if (gameEnded) {
-            gameEnded = false;
-            document.getElementById('scoreboard-page').classList.remove('game-ended');
-            checkGameEnd();
+        async function loadCaptcha() {
+            const container = document.getElementById('captchaImageContainer');
+            container.innerHTML = '<span style="color: #999;">載入中...</span>';
+            try {
+                const resp = await fetch(`${WORKER_URL}/captcha`);
+                const data = await resp.json();
+                if (data.captchaImage) {
+                    container.innerHTML = `<img src="${data.captchaImage}" alt="驗證碼">`;
+                    currentSessionId = data.sessionId;
+                } else {
+                    container.innerHTML = '<span style="color: #dc3545;">載入失敗</span>';
+                }
+            } catch (err) {
+                console.error('載入驗證碼失敗:', err);
+                container.innerHTML = '<span style="color: #dc3545;">⚠️ 無法連接後端<br>請確認 Worker 已部署</span>';
+            }
         }
-        updateGameStatus();
-    }
 
-    function resetScores() {
-        if (confirm('確定要重設分數嗎？')) {
-            scoreA = 0;
-            scoreB = 0;
-            gameEnded = false;
-            
-            // 移除遊戲結束狀態
-            document.getElementById('scoreboard-page').classList.remove('game-ended');
-            
-            // 重要：移除勝利者樣式
-            document.getElementById('score-a').classList.remove('winner');
-            document.getElementById('score-b').classList.remove('winner');
-            
+        async function queryMembership() {
+            const playerId = document.getElementById('memberSelect').value;
+            const account = document.getElementById('memberAccount').value;
+            const idLast3 = document.getElementById('memberIdLast3').value;
+            const birthday = document.getElementById('memberBirthday').value;
+            const phone = document.getElementById('memberPhone').value;
+            const captcha = document.getElementById('captchaInput').value;
+            const resultDiv = document.getElementById('membershipResult');
+
+            if (!playerId) { alert('請先選擇球員'); return; }
+            if (!birthday || birthday.length !== 2) { alert('請輸入生日後2碼'); return; }
+            if (!phone || phone.length !== 3) { alert('請輸入手機後3碼'); return; }
+            if (!captcha) { alert('請輸入驗證碼'); return; }
+            if (!currentSessionId) { alert('請先載入驗證碼'); return; }
+
+            const password = idLast3 + birthday + phone;
+            saveMemberData(playerId, birthday, phone);
+
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'membership-result';
+            resultDiv.innerHTML = '⏳ 查詢中...';
+
+            try {
+                const resp = await fetch(`${WORKER_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId: currentSessionId, account, password, captcha })
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    resultDiv.className = 'membership-result success';
+                    let html = `✅ 查詢成功<div class="expire-date">到期日：${data.expireDate}</div>`;
+                    if (data.memberName) html += `<div class="member-info">姓名：${data.memberName}</div>`;
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.className = 'membership-result error';
+                    let errorMsg = `❌ ${data.error || '查詢失敗，請重試'}`;
+                    if (data.debug) {
+                        errorMsg += `<details style="margin-top:8px;font-size:12px;"><summary>除錯資訊</summary><pre style="white-space:pre-wrap;word-break:break-all;max-height:200px;overflow:auto;">${data.debug}</pre></details>`;
+                    }
+                    resultDiv.innerHTML = errorMsg;
+                    loadCaptcha();
+                }
+            } catch (err) {
+                console.error('查詢失敗:', err);
+                resultDiv.className = 'membership-result error';
+                resultDiv.innerHTML = '❌ 無法連接後端，請確認 Worker 已部署';
+            }
+            document.getElementById('captchaInput').value = '';
+        }
+
+
+
+        // 戰術板初始化
+        function initTacticalBoard() {
+            const playerDots = document.querySelectorAll('.player-dot, .shuttlecock');
+
+            playerDots.forEach(dot => {
+                // 滑鼠事件
+                dot.addEventListener('mousedown', startDrag);
+
+                // 觸控事件
+                dot.addEventListener('touchstart', startDrag, { passive: false });
+            });
+
+            // 全域事件監聽
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchmove', drag, { passive: false });
+            document.addEventListener('touchend', endDrag);
+
+            // 初始化位置
+            setTimeout(() => {
+                resetPlayerPositions();
+            }, 100);
+        }
+
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            currentDragElement = e.target;
+            currentDragElement.classList.add('dragging');
+
+            const rect = document.getElementById('courtContainer').getBoundingClientRect();
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+            dragOffset.x = clientX - rect.left - (currentDragElement.offsetLeft + currentDragElement.offsetWidth / 2);
+            dragOffset.y = clientY - rect.top - (currentDragElement.offsetTop + currentDragElement.offsetHeight / 2);
+        }
+
+        function drag(e) {
+            if (!isDragging || !currentDragElement) return;
+            e.preventDefault();
+
+            const rect = document.getElementById('courtContainer').getBoundingClientRect();
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+            let x = clientX - rect.left - dragOffset.x - currentDragElement.offsetWidth / 2;
+            let y = clientY - rect.top - dragOffset.y - currentDragElement.offsetHeight / 2;
+
+            // 邊界檢測
+            const maxX = rect.width - currentDragElement.offsetWidth;
+            const maxY = rect.height - currentDragElement.offsetHeight;
+
+            x = Math.max(0, Math.min(x, maxX));
+            y = Math.max(0, Math.min(y, maxY));
+
+            currentDragElement.style.left = x + 'px';
+            currentDragElement.style.top = y + 'px';
+        }
+
+        function endDrag() {
+            if (currentDragElement) {
+                currentDragElement.classList.remove('dragging');
+            }
+            isDragging = false;
+            currentDragElement = null;
+        }
+
+        function resetPlayerPositions() {
+            const courtContainer = document.getElementById('courtContainer');
+            const rect = courtContainer.getBoundingClientRect();
+
+            Object.keys(initialPositions).forEach(playerId => {
+                const dot = document.getElementById(playerId);
+                const pos = initialPositions[playerId];
+
+                // 計算實際位置（考慮圓點大小）
+                const x = (pos.x / 100) * rect.width - dot.offsetWidth / 2;
+                const y = (pos.y / 100) * rect.height - dot.offsetHeight / 2;
+
+                dot.style.left = Math.max(0, Math.min(x, rect.width - dot.offsetWidth)) + 'px';
+                dot.style.top = Math.max(0, Math.min(y, rect.height - dot.offsetHeight)) + 'px';
+            });
+        }
+
+        // === 新增：計分板相關函數 ===
+        function initScoreboard() {
+            const tapAreaA = document.getElementById('tap-area-a');
+            const tapAreaB = document.getElementById('tap-area-b');
+            const swapBtn = document.getElementById('swap-btn');
+            const resetBtn = document.getElementById('reset-score-btn');
+
+            // 左側點擊區域事件
+            tapAreaA.addEventListener('mousedown', (e) => startLongPress('a', e));
+            tapAreaA.addEventListener('mouseup', () => endLongPress('a'));
+            tapAreaA.addEventListener('mouseleave', () => cancelLongPress());
+            tapAreaA.addEventListener('touchstart', (e) => startLongPress('a', e), { passive: false });
+            tapAreaA.addEventListener('touchend', () => endLongPress('a'));
+            tapAreaA.addEventListener('touchcancel', () => cancelLongPress());
+
+            // 右側點擊區域事件
+            tapAreaB.addEventListener('mousedown', (e) => startLongPress('b', e));
+            tapAreaB.addEventListener('mouseup', () => endLongPress('b'));
+            tapAreaB.addEventListener('mouseleave', () => cancelLongPress());
+            tapAreaB.addEventListener('touchstart', (e) => startLongPress('b', e), { passive: false });
+            tapAreaB.addEventListener('touchend', () => endLongPress('b'));
+            tapAreaB.addEventListener('touchcancel', () => cancelLongPress());
+
+            // 功能按鈕事件
+            swapBtn.addEventListener('click', swapScores);
+            resetBtn.addEventListener('click', resetScores);
+
+            // 初始化分數顯示
             updateScoreDisplay();
             updateGameStatus();
         }
-    }
-    // === 計分板函數結束 ===
 
-    // 分頁切換
-    function showTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        event.currentTarget.classList.add('active');
-        
-        if (tabName === 'dashboard') {
-            loadDashboardData();
-        } else if (tabName === 'tactical') {
-            // 延遲初始化戰術板，確保DOM已渲染
-            setTimeout(() => {
-                resetPlayerPositions();
-            }, 100);
+        function startLongPress(side, e) {
+            // 如果遊戲已結束，不允許計分
+            if (gameEnded) return;
+
+            e.preventDefault();
+            isLongPress = false;
+
+            // 設定長按計時器 (500ms)
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                decreaseScore(side);
+
+                // 觸覺回饋 (如果支援)
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }, 500);
         }
-    }
 
-    // 頁面載入完成後初始化
-    window.addEventListener('load', () => {
-        createTimeButtons();
-        createPlayerButtons();
-        initFirebase();
-        initTacticalBoard();
-        initScoreboard(); // 新增：初始化計分板
-    });
+        function endLongPress(side) {
+            // 如果遊戲已結束，不允許計分
+            if (gameEnded) return;
 
-    // 視窗大小改變時重新調整圓點位置
-    window.addEventListener('resize', () => {
-        if (document.getElementById('tactical').classList.contains('active')) {
-            setTimeout(() => {
-                resetPlayerPositions();
-            }, 100);
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+
+            // 如果不是長按，則執行加分
+            if (!isLongPress) {
+                increaseScore(side);
+            }
+
+            isLongPress = false;
         }
-    });
+
+        function cancelLongPress() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+            isLongPress = false;
+        }
+
+        function increaseScore(side) {
+            // 如果遊戲已結束，不允許加分
+            if (gameEnded) return;
+
+            if (side === 'a') {
+                scoreA++;
+            } else {
+                scoreB++;
+            }
+
+            updateScoreDisplay();
+            checkGameEnd();
+            updateGameStatus();
+        }
+
+        function decreaseScore(side) {
+            if (side === 'a' && scoreA > 0) {
+                scoreA--;
+            } else if (side === 'b' && scoreB > 0) {
+                scoreB--;
+            }
+
+            updateScoreDisplay();
+
+            // 如果遊戲已結束但分數改變，重新檢查遊戲狀態
+            if (gameEnded) {
+                gameEnded = false;
+                document.getElementById('scoreboard-page').classList.remove('game-ended');
+                checkGameEnd();
+            }
+            updateGameStatus();
+        }
+
+        function updateScoreDisplay() {
+            const scoreAElement = document.getElementById('score-a');
+            const scoreBElement = document.getElementById('score-b');
+
+            scoreAElement.textContent = scoreA;
+            scoreBElement.textContent = scoreB;
+
+            // 移除之前的勝利樣式
+            scoreAElement.classList.remove('winner');
+            scoreBElement.classList.remove('winner');
+        }
+
+        function checkGameEnd() {
+            let winner = null;
+
+            // 羽球21分制規則
+            if (scoreA >= 21 || scoreB >= 21) {
+                if (scoreA >= 21 && scoreB < 20) {
+                    // A隊21分且B隊小於20分
+                    winner = 'a';
+                } else if (scoreB >= 21 && scoreA < 20) {
+                    // B隊21分且A隊小於20分
+                    winner = 'b';
+                } else if (scoreA >= 20 && scoreB >= 20) {
+                    // Deuce 狀態：雙方都至少20分
+                    if (scoreA >= 30 || scoreB >= 30) {
+                        // 30分上限規則：先得30分者勝
+                        winner = scoreA > scoreB ? 'a' : 'b';
+                    } else if (Math.abs(scoreA - scoreB) >= 2) {
+                        // 需要領先2分才能獲勝
+                        winner = scoreA > scoreB ? 'a' : 'b';
+                    }
+                }
+            }
+
+            if (winner) {
+                gameEnded = true;
+                const winnerElement = document.getElementById(`score-${winner}`);
+                winnerElement.classList.add('winner');
+
+                // 添加遊戲結束的視覺效果
+                document.getElementById('scoreboard-page').classList.add('game-ended');
+
+                // 觸覺回饋
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100, 50, 100]);
+                }
+            }
+        }
+
+        function updateGameStatus() {
+            const statusElement = document.getElementById('game-status');
+
+            if (gameEnded) {
+                const winner = scoreA > scoreB ? '左隊' : '右隊';
+                statusElement.textContent = `🏆 ${winner}獲勝！`;
+                statusElement.className = 'game-status winner-announced';
+            } else if (scoreA >= 20 && scoreB >= 20) {
+                statusElement.textContent = '⚡ Deuce - 需領先2分獲勝';
+                statusElement.className = 'game-status';
+            } else if (scoreA >= 29 && scoreB >= 29) {
+                statusElement.textContent = '🔥 30分決勝局！';
+                statusElement.className = 'game-status';
+            } else {
+                statusElement.textContent = '';
+                statusElement.className = 'game-status';
+            }
+        }
+
+        function swapScores() {
+            // 交換分數
+            const tempScore = scoreA;
+            scoreA = scoreB;
+            scoreB = tempScore;
+
+            updateScoreDisplay();
+
+            // 如果遊戲已結束，重新檢查勝利者
+            if (gameEnded) {
+                gameEnded = false;
+                document.getElementById('scoreboard-page').classList.remove('game-ended');
+                checkGameEnd();
+            }
+            updateGameStatus();
+        }
+
+        function resetScores() {
+            if (confirm('確定要重設分數嗎？')) {
+                scoreA = 0;
+                scoreB = 0;
+                gameEnded = false;
+
+                // 移除遊戲結束狀態
+                document.getElementById('scoreboard-page').classList.remove('game-ended');
+
+                // 重要：移除勝利者樣式
+                document.getElementById('score-a').classList.remove('winner');
+                document.getElementById('score-b').classList.remove('winner');
+
+                updateScoreDisplay();
+                updateGameStatus();
+            }
+        }
+        // === 計分板函數結束 ===
+
+        // 分頁切換
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if (tabName === 'tactical') {
+                // 延遲初始化戰術板，確保DOM已渲染
+                setTimeout(() => {
+                    resetPlayerPositions();
+                }, 100);
+            }
+        }
+
+        // 頁面載入完成後初始化
+        window.addEventListener('load', () => {
+            createTimeButtons();
+            createPlayerButtons();
+            initMembershipTab();
+            initTacticalBoard();
+            initScoreboard();
+        });
+
+        // 視窗大小改變時重新調整圓點位置
+        window.addEventListener('resize', () => {
+            if (document.getElementById('tactical').classList.contains('active')) {
+                setTimeout(() => {
+                    resetPlayerPositions();
+                }, 100);
+            }
+        });
     </script>
 
 </body>
 
 
 <footer class="score-footer">
-  © 2025 羽球小工具 · made by linlin
+    © 2025 羽球小工具 · made by linlin
 </footer>
+
 </html>
