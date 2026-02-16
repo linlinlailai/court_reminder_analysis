@@ -1020,10 +1020,9 @@
             { id: "CK17851林裕明322", label: "裕明 Eric" }
         ];
 
-        // 戰術板相關變數
-        let isDragging = false;
-        let currentDragElement = null;
-        let dragOffset = { x: 0, y: 0 };
+        // 戰術板相關變數 - 多點觸控支援
+        const activeTouches = new Map(); // touchId -> { element, offsetX, offsetY }
+        let mouseDrag = null; // 滑鼠拖曳用: { element, offsetX, offsetY }
 
         // 初始球員位置 (百分比)
         const initialPositions = {
@@ -1299,17 +1298,19 @@
 
             playerDots.forEach(dot => {
                 // 滑鼠事件
-                dot.addEventListener('mousedown', startDrag);
-
-                // 觸控事件
-                dot.addEventListener('touchstart', startDrag, { passive: false });
+                dot.addEventListener('mousedown', mouseStart);
+                // 觸控事件 - 每個元素各自處理
+                dot.addEventListener('touchstart', touchStart, { passive: false });
             });
 
-            // 全域事件監聽
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', endDrag);
-            document.addEventListener('touchmove', drag, { passive: false });
-            document.addEventListener('touchend', endDrag);
+            // 全域滑鼠事件
+            document.addEventListener('mousemove', mouseMove);
+            document.addEventListener('mouseup', mouseEnd);
+
+            // 全域觸控事件
+            document.addEventListener('touchmove', touchMove, { passive: false });
+            document.addEventListener('touchend', touchEnd);
+            document.addEventListener('touchcancel', touchEnd);
 
             // 初始化位置
             setTimeout(() => {
@@ -1317,48 +1318,102 @@
             }, 100);
         }
 
-        function startDrag(e) {
+        // --- 滑鼠拖曳（單點）---
+        function mouseStart(e) {
             e.preventDefault();
-            isDragging = true;
-            currentDragElement = e.target;
-            currentDragElement.classList.add('dragging');
-
+            const el = e.target;
+            el.classList.add('dragging');
             const rect = document.getElementById('courtContainer').getBoundingClientRect();
-            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-            dragOffset.x = clientX - rect.left - (currentDragElement.offsetLeft + currentDragElement.offsetWidth / 2);
-            dragOffset.y = clientY - rect.top - (currentDragElement.offsetTop + currentDragElement.offsetHeight / 2);
+            mouseDrag = {
+                element: el,
+                offsetX: e.clientX - rect.left - (el.offsetLeft + el.offsetWidth / 2),
+                offsetY: e.clientY - rect.top - (el.offsetTop + el.offsetHeight / 2),
+            };
         }
 
-        function drag(e) {
-            if (!isDragging || !currentDragElement) return;
+        function mouseMove(e) {
+            if (!mouseDrag) return;
+            e.preventDefault();
+            moveElement(mouseDrag.element, e.clientX, e.clientY, mouseDrag.offsetX, mouseDrag.offsetY);
+        }
+
+        function mouseEnd() {
+            if (mouseDrag) {
+                mouseDrag.element.classList.remove('dragging');
+                mouseDrag = null;
+            }
+        }
+
+        // --- 觸控拖曳（多點）---
+        function touchStart(e) {
+            e.preventDefault();
+            const rect = document.getElementById('courtContainer').getBoundingClientRect();
+
+            // 處理每一個新觸控點
+            for (const touch of e.changedTouches) {
+                const el = e.currentTarget; // 觸發事件的元素
+                // 檢查這個元素是否已經被其他手指拖著
+                let alreadyDragged = false;
+                for (const info of activeTouches.values()) {
+                    if (info.element === el) { alreadyDragged = true; break; }
+                }
+                if (alreadyDragged) continue;
+
+                el.classList.add('dragging');
+                activeTouches.set(touch.identifier, {
+                    element: el,
+                    offsetX: touch.clientX - rect.left - (el.offsetLeft + el.offsetWidth / 2),
+                    offsetY: touch.clientY - rect.top - (el.offsetTop + el.offsetHeight / 2),
+                });
+            }
+        }
+
+        function touchMove(e) {
+            if (activeTouches.size === 0) return;
             e.preventDefault();
 
-            const rect = document.getElementById('courtContainer').getBoundingClientRect();
-            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            for (const touch of e.changedTouches) {
+                const info = activeTouches.get(touch.identifier);
+                if (info) {
+                    moveElement(info.element, touch.clientX, touch.clientY, info.offsetX, info.offsetY);
+                }
+            }
+        }
 
-            let x = clientX - rect.left - dragOffset.x - currentDragElement.offsetWidth / 2;
-            let y = clientY - rect.top - dragOffset.y - currentDragElement.offsetHeight / 2;
+        function touchEnd(e) {
+            for (const touch of e.changedTouches) {
+                const info = activeTouches.get(touch.identifier);
+                if (info) {
+                    info.element.classList.remove('dragging');
+                    activeTouches.delete(touch.identifier);
+                }
+            }
+        }
+
+        // --- 共用移動邏輯 ---
+        function moveElement(el, clientX, clientY, offsetX, offsetY) {
+            const rect = document.getElementById('courtContainer').getBoundingClientRect();
+            let x = clientX - rect.left - offsetX - el.offsetWidth / 2;
+            let y = clientY - rect.top - offsetY - el.offsetHeight / 2;
 
             // 邊界檢測
-            const maxX = rect.width - currentDragElement.offsetWidth;
-            const maxY = rect.height - currentDragElement.offsetHeight;
-
+            const maxX = rect.width - el.offsetWidth;
+            const maxY = rect.height - el.offsetHeight;
             x = Math.max(0, Math.min(x, maxX));
             y = Math.max(0, Math.min(y, maxY));
 
-            currentDragElement.style.left = x + 'px';
-            currentDragElement.style.top = y + 'px';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
         }
 
         function endDrag() {
-            if (currentDragElement) {
-                currentDragElement.classList.remove('dragging');
+            // 清除所有拖曳狀態（用於重置按鈕）
+            activeTouches.forEach(info => info.element.classList.remove('dragging'));
+            activeTouches.clear();
+            if (mouseDrag) {
+                mouseDrag.element.classList.remove('dragging');
+                mouseDrag = null;
             }
-            isDragging = false;
-            currentDragElement = null;
         }
 
         function resetPlayerPositions() {
