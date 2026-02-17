@@ -220,6 +220,7 @@
             font-size: 14px;
             resize: vertical;
             background: #f8f9fa;
+            box-sizing: border-box;
         }
 
         .success-message {
@@ -743,6 +744,46 @@
 
         /* === 計分板樣式結束 === */
 
+        /* === 板凳折疊區塊樣式 === */
+        .bench-toggle {
+            color: #333;
+            border: none;
+            background: none;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 25px;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+            width: 100%;
+        }
+
+        .bench-toggle .toggle-arrow {
+            transition: transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        .bench-toggle.open .toggle-arrow {
+            transform: rotate(180deg);
+        }
+
+        .bench-players-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .bench-players-wrapper.open {
+            max-height: 800px;
+        }
+
+        /* === 板凳折疊區塊樣式結束 === */
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -845,6 +886,14 @@
             <div class="section">
                 <h2>👥 選擇參與者</h2>
                 <div class="player-grid" id="playerButtons"></div>
+
+                <div class="bench-toggle" id="benchToggle" onclick="toggleBench()">
+                    <span>🪑 太久沒打球會被板凳</span>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="bench-players-wrapper" id="benchWrapper">
+                    <div class="player-grid" id="benchPlayerButtons"></div>
+                </div>
             </div>
 
             <div class="section">
@@ -1003,20 +1052,20 @@
             { id: "CK17792張嘉聞531", label: "嘉聞 ChiaWen" },
             { id: "CK17718張富翔492", label: "富翔 Oscar" },
             { id: "CK17854嚴友志512", label: "友志 Jerry" },
-            { id: "CS15024林瑋青552", label: "瑋青 David" },
+            { id: "CS15024林瑋青552", label: "瑋青 David", bench: true },
             { id: "CS15072陳煜瑋128", label: "煜瑋 Benson" },
             { id: "CK17793方  煒218", label: "方煒 Tony" },
             { id: "CK17863游振浩872", label: "振浩 Howard" },
-            { id: "CK17795王冠翔436", label: "冠翔 Damien" },
-            { id: "CK17812林杰凱808", label: "杰凱 Adam" },
-            { id: "CK17509曾宇溢406", label: "宇溢 Eugene" },
-            { id: "CK17630詹鈞貿628", label: "鈞貿 CM" },
-            { id: "CK17556白承偉687", label: "小白 Chuck" },
-            { id: "CK17657林楊凱196", label: "楊凱 Zack" },
-            { id: "CK17815蔡佳宏079", label: "佳宏 Ian" },
-            { id: "CK17724謝德慶104", label: "德慶 Lantis" },
-            { id: "CK17835江嘉胤094", label: "嘉胤 John" },
-            { id: "CF32054林宗翰314", label: "宗翰" },
+            { id: "CK17795王冠翔436", label: "冠翔 Damien", bench: true },
+            { id: "CK17812林杰凱808", label: "杰凱 Adam", bench: true },
+            { id: "CK17509曾宇溢406", label: "宇溢 Eugene", bench: true },
+            { id: "CK17630詹鈞貿628", label: "鈞貿 CM", bench: true },
+            { id: "CK17556白承偉687", label: "小白 Chuck", bench: true },
+            { id: "CK17657林楊凱196", label: "楊凱 Zack", bench: true },
+            { id: "CK17815蔡佳宏079", label: "佳宏 Ian", bench: true },
+            { id: "CK17724謝德慶104", label: "德慶 Lantis", bench: true },
+            { id: "CK17835江嘉胤094", label: "嘉胤 John", bench: true },
+            { id: "CF32054林宗翰314", label: "宗翰", bench: true },
             { id: "CK17851林裕明322", label: "裕明 Eric" }
         ];
 
@@ -1060,6 +1109,7 @@
         // 建立人員按鈕
         function createPlayerButtons() {
             const playerButtonsDiv = document.getElementById("playerButtons");
+            const benchButtonsDiv = document.getElementById("benchPlayerButtons");
             players.forEach(player => {
                 const btn = document.createElement("button");
                 btn.textContent = player.label;
@@ -1085,8 +1135,20 @@
                     updateOutput();
                 };
                 btn.id = "btn_" + player.id;
-                playerButtonsDiv.appendChild(btn);
+                if (player.bench) {
+                    benchButtonsDiv.appendChild(btn);
+                } else {
+                    playerButtonsDiv.appendChild(btn);
+                }
             });
+        }
+
+        // 切換板凳區塊展開/收合
+        function toggleBench() {
+            const toggle = document.getElementById('benchToggle');
+            const wrapper = document.getElementById('benchWrapper');
+            toggle.classList.toggle('open');
+            wrapper.classList.toggle('open');
         }
 
         // 更新人員按鈕狀態
