@@ -1082,6 +1082,9 @@
             shuttlecock: { x: 50, y: 50 }  // 新增羽球初始位置
         };
 
+        // 目前球員位置 (百分比)
+        let currentPositions = JSON.parse(JSON.stringify(initialPositions));
+
         // === 新增：計分板相關變數 ===
         let scoreA = 0;
         let scoreB = 0;
@@ -1466,6 +1469,14 @@
 
             el.style.left = x + 'px';
             el.style.top = y + 'px';
+
+            // 記錄目前的相對位置(百分比)
+            if (currentPositions[el.id]) {
+                currentPositions[el.id] = {
+                    x: (x + el.offsetWidth / 2) / rect.width * 100,
+                    y: (y + el.offsetHeight / 2) / rect.height * 100
+                };
+            }
         }
 
         function endDrag() {
@@ -1478,13 +1489,14 @@
             }
         }
 
-        function resetPlayerPositions() {
+        function recalculatePlayerPositions() {
             const courtContainer = document.getElementById('courtContainer');
             const rect = courtContainer.getBoundingClientRect();
 
-            Object.keys(initialPositions).forEach(playerId => {
+            Object.keys(currentPositions).forEach(playerId => {
                 const dot = document.getElementById(playerId);
-                const pos = initialPositions[playerId];
+                if (!dot) return;
+                const pos = currentPositions[playerId];
 
                 // 計算實際位置（考慮圓點大小）
                 const x = (pos.x / 100) * rect.width - dot.offsetWidth / 2;
@@ -1493,6 +1505,11 @@
                 dot.style.left = Math.max(0, Math.min(x, rect.width - dot.offsetWidth)) + 'px';
                 dot.style.top = Math.max(0, Math.min(y, rect.height - dot.offsetHeight)) + 'px';
             });
+        }
+
+        function resetPlayerPositions() {
+            currentPositions = JSON.parse(JSON.stringify(initialPositions));
+            recalculatePlayerPositions();
         }
 
         // === 新增：計分板相關函數 ===
@@ -1719,7 +1736,7 @@
             if (tabName === 'tactical') {
                 // 延遲初始化戰術板，確保DOM已渲染
                 setTimeout(() => {
-                    resetPlayerPositions();
+                    recalculatePlayerPositions();
                 }, 100);
             }
         }
@@ -1737,7 +1754,7 @@
         window.addEventListener('resize', () => {
             if (document.getElementById('tactical').classList.contains('active')) {
                 setTimeout(() => {
-                    resetPlayerPositions();
+                    recalculatePlayerPositions();
                 }, 100);
             }
         });
