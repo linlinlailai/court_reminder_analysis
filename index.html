@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏸 羽球小工具(開發用)</title>
+    <title>🏸 羽球小工具</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -855,25 +855,194 @@
             padding: 8px 0;
             font-size: 0.8em;
             color: rgba(255, 255, 255, 0.6);
-            /* 淡灰字 */
             background-color: #2f3b4a;
-            /* 深藍背景 */
             border-top: 1px solid rgba(255, 255, 255, 0.2);
-            /* 淡灰分隔線 */
+        }
+
+        /* === 買球記帳樣式 === */
+        .bp-form {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .bp-form h3 {
+            margin: 0 0 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .bp-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .bp-form-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        .bp-form-grid label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .bp-form-grid input,
+        .bp-form-grid select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .bp-form-grid input:focus,
+        .bp-form-grid select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .bp-add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .bp-add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .bp-add-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bp-summary {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .bp-summary-card {
+            flex: 1;
+            min-width: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .bp-summary-card .bp-summary-label {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 5px;
+        }
+
+        .bp-summary-card .bp-summary-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .bp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bp-record {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bp-record-info {
+            flex: 1;
+        }
+
+        .bp-record-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .bp-record-detail {
+            font-size: 13px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .bp-record-amount {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #667eea;
+            white-space: nowrap;
+        }
+
+        .bp-delete-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .bp-delete-btn:hover {
+            background: #fdecea;
+        }
+
+        .bp-empty {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 15px;
+        }
+
+        .bp-loading {
+            text-align: center;
+            color: #999;
+            padding: 30px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>🏸 羽球小工具 (開發用)</h1>
+        <h1>🏸 羽球小工具 </h1>
 
         <div class="tabs">
-            <button class="tab active" onclick="showTab('generator')">通知產生器</button>
-            <button class="tab" onclick="showTab('membership')">會員查詢</button>
-            <button class="tab" onclick="showTab('tactical')">戰術板</button>
+            <button class="tab active" onclick="showTab('generator')">📋 通知產生器</button>
+            <button class="tab" onclick="showTab('membership')">🔍 會員快速查詢</button>
+            <button class="tab" onclick="showTab('tactical')">🏸 戰術板</button>
             <!-- 新增：計分板按鈕 -->
-            <button class="tab" onclick="showTab('scoreboard')">計分板</button>
+            <button class="tab" onclick="showTab('scoreboard')">🏆 計分板</button>
+            <button class="tab" onclick="showTab('ballpurchase')">🛒 買球記帳</button>
         </div>
 
         <div id="generator" class="tab-content active">
@@ -933,7 +1102,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>� 生日後2碼</label>
+                        <label>🍰 生日後2碼</label>
                         <input type="text" id="memberBirthday" maxlength="2" placeholder="例: 15" inputmode="numeric">
                     </div>
                     <div class="form-group">
@@ -942,7 +1111,7 @@
                     </div>
                 </div>
                 <div class="captcha-container">
-                    <label>� 驗證碼</label>
+                    <label>🆔 驗證碼</label>
                     <div class="captcha-row">
                         <div id="captchaImageContainer" class="captcha-image">
                             <span style="color: #999;">請先按「載入驗證碼」</span>
@@ -1027,6 +1196,51 @@
                     <button id="swap-btn" class="scoreboard-btn">🔄 交換場地</button>
                     <button id="reset-score-btn" class="scoreboard-btn">🧹 重設分數</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- 買球記帳 -->
+        <div id="ballpurchase" class="tab-content">
+            <div class="section">
+                <h2>🛒 買球記帳</h2>
+
+                <!-- 新增表單 -->
+                <div class="bp-form">
+                    <h3>➕ 新增一筆</h3>
+                    <div class="bp-form-grid">
+                        <div class="form-group">
+                            <label>👤 購買者</label>
+                            <select id="bp-buyer"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>🏸 品牌</label>
+                            <input type="text" id="bp-brand" placeholder="例: Yonex AS-30">
+                        </div>
+                        <div class="form-group">
+                            <label>📦 數量（筒）</label>
+                            <input type="number" id="bp-qty" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>💰 金額（元）</label>
+                            <input type="number" id="bp-amount" placeholder="例: 800" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>📅 日期</label>
+                            <input type="date" id="bp-date">
+                        </div>
+                        <div class="form-group">
+                            <label>📝 備註</label>
+                            <input type="text" id="bp-note" placeholder="選填">
+                        </div>
+                    </div>
+                    <button class="bp-add-btn" id="bp-add-btn" onclick="addBallPurchase()">新增記錄</button>
+                </div>
+
+                <!-- 合計摘要 -->
+                <div id="bp-summary"></div>
+
+                <!-- 記錄列表 -->
+                <div id="bp-list"><div class="bp-loading">⏳ 載入中...</div></div>
             </div>
         </div>
     </div>
@@ -1727,6 +1941,167 @@
         }
         // === 計分板函數結束 ===
 
+        // === 買球記帳函數 ===
+        function initBallPurchase() {
+            // 填入購買者下拉選單
+            const sel = document.getElementById('bp-buyer');
+            players.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.label;
+                opt.textContent = p.label;
+                sel.appendChild(opt);
+            });
+            // 預設日期為今天
+            const today = new Date().toISOString().slice(0, 10);
+            document.getElementById('bp-date').value = today;
+            // 載入記錄
+            loadBallPurchases();
+        }
+
+        async function loadBallPurchases() {
+            const listEl = document.getElementById('bp-list');
+            listEl.innerHTML = '<div class="bp-loading">⏳ 載入中...</div>';
+            try {
+                const resp = await fetch(`${WORKER_URL}/ball-purchases`);
+                const data = await resp.json();
+                if (data.success) {
+                    renderBallPurchases(data.purchases);
+                } else {
+                    listEl.innerHTML = `<div class="bp-empty">❌ 載入失敗：${data.error}</div>`;
+                }
+            } catch (err) {
+                listEl.innerHTML = '<div class="bp-empty">❌ 無法連接後端，請確認 Worker 已部署</div>';
+            }
+        }
+
+        async function addBallPurchase() {
+            const buyer = document.getElementById('bp-buyer').value;
+            const brand = document.getElementById('bp-brand').value.trim();
+            const qty = parseInt(document.getElementById('bp-qty').value) || 1;
+            const amount = document.getElementById('bp-amount').value.trim();
+            const date = document.getElementById('bp-date').value;
+            const note = document.getElementById('bp-note').value.trim();
+
+            if (!amount || isNaN(Number(amount))) {
+                alert('請填入金額！');
+                return;
+            }
+
+            const btn = document.getElementById('bp-add-btn');
+            btn.disabled = true;
+            btn.textContent = '新增中...';
+
+            try {
+                const resp = await fetch(`${WORKER_URL}/ball-purchases`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ buyer, brand, qty, amount, date, note })
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    // 清空品牌、備註、金額
+                    document.getElementById('bp-brand').value = '';
+                    document.getElementById('bp-amount').value = '';
+                    document.getElementById('bp-note').value = '';
+                    document.getElementById('bp-qty').value = '1';
+                    await loadBallPurchases();
+                } else {
+                    alert('新增失敗：' + (data.error || '請重試'));
+                }
+            } catch (err) {
+                alert('無法連接後端！');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '新增記錄';
+            }
+        }
+
+        async function deleteBallPurchase(id) {
+            if (!confirm('確定要刪除這筆記錄嗎？')) return;
+            try {
+                const resp = await fetch(`${WORKER_URL}/ball-purchases/${id}`, { method: 'DELETE' });
+                const data = await resp.json();
+                if (data.success) {
+                    await loadBallPurchases();
+                } else {
+                    alert('刪除失敗：' + (data.error || '請重試'));
+                }
+            } catch (err) {
+                alert('無法連接後端！');
+            }
+        }
+
+        function renderBallPurchases(purchases) {
+            const listEl = document.getElementById('bp-list');
+            const summaryEl = document.getElementById('bp-summary');
+
+            if (!purchases || purchases.length === 0) {
+                listEl.innerHTML = '<div class="bp-empty">📭 還沒有任何記錄，新增第一筆吧！</div>';
+                summaryEl.innerHTML = '';
+                return;
+            }
+
+            // 按年份分組
+            const byYear = {};
+            purchases.forEach(p => {
+                const year = p.date ? p.date.slice(0, 4) : '不明';
+                if (!byYear[year]) byYear[year] = [];
+                byYear[year].push(p);
+            });
+
+            // 年份降冪排列（最新在前）
+            const sortedYears = Object.keys(byYear).sort((a, b) => b.localeCompare(a));
+
+            // 渲染年度合計卡片
+            summaryEl.innerHTML = '';
+            const summaryRow = document.createElement('div');
+            summaryRow.className = 'bp-summary';
+            sortedYears.forEach(year => {
+                const recs = byYear[year];
+                const yearTotal = recs.reduce((s, p) => s + Number(p.amount), 0);
+                summaryRow.innerHTML += `
+                    <div class="bp-summary-card">
+                        <div class="bp-summary-label">${year} 年（${recs.length} 筆）</div>
+                        <div class="bp-summary-value">$${yearTotal.toLocaleString()}</div>
+                    </div>`;
+            });
+            summaryEl.appendChild(summaryRow);
+
+            // 渲染分年度記錄列表
+            listEl.innerHTML = '';
+            sortedYears.forEach(year => {
+                const yearHeader = document.createElement('h3');
+                yearHeader.style.cssText = 'color:#667eea;border-bottom:2px solid #667eea;padding-bottom:8px;margin:20px 0 12px;';
+                yearHeader.textContent = `📅 ${year} 年`;
+                listEl.appendChild(yearHeader);
+
+                const listDiv = document.createElement('div');
+                listDiv.className = 'bp-list';
+                byYear[year].forEach(p => {
+                    const details = [];
+                    if (p.brand) details.push(`品牌：${p.brand}`);
+                    if (p.qty) details.push(`數量：${p.qty} 筒`);
+                    if (p.date) details.push(`日期：${p.date}`);
+                    if (p.note) details.push(`備註：${p.note}`);
+
+                    const card = document.createElement('div');
+                    card.className = 'bp-record';
+                    card.innerHTML = `
+                        <div class="bp-record-info">
+                            <div class="bp-record-name">👤 ${p.buyer}</div>
+                            <div class="bp-record-detail">${details.join('　')}</div>
+                        </div>
+                        <div class="bp-record-amount">$${Number(p.amount).toLocaleString()}</div>
+                        <button class="bp-delete-btn" onclick="deleteBallPurchase('${p.id}')" title="刪除">🗑️</button>
+                    `;
+                    listDiv.appendChild(card);
+                });
+                listEl.appendChild(listDiv);
+            });
+        }
+
+        // === 買球記帳函數結束 ===
+
         // 分頁切換
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1749,6 +2124,7 @@
             initMembershipTab();
             initTacticalBoard();
             initScoreboard();
+            initBallPurchase();
         });
 
         // 視窗大小改變時重新調整圓點位置
@@ -1767,5 +2143,7 @@
 <footer class="score-footer">
     © 2025 羽球小工具 · made by linlin
 </footer>
+
+
 
 </html>

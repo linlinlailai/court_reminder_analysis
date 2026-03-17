@@ -12,7 +12,7 @@ const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 function corsHeaders(origin) {
     return {
         'Access-Control-Allow-Origin': origin || '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
     };
 }
@@ -44,7 +44,7 @@ function buildCookieString(setCookieHeaders) {
 }
 
 export default {
-    async fetch(request) {
+    async fetch(request, env) {
         const url = new URL(request.url);
         const origin = request.headers.get('Origin');
         if (request.method === 'OPTIONS') {
@@ -54,7 +54,16 @@ export default {
             if (url.pathname === '/captcha') return await handleCaptcha(origin);
             if (url.pathname === '/login' && request.method === 'POST') return await handleLogin(await request.json(), origin);
             if (url.pathname === '/test') return await handleTest();
-            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test'] }, origin);
+
+            // === 買球記帳 API ===
+            if (url.pathname === '/ball-purchases' && request.method === 'GET') return await getBallPurchases(env, origin);
+            if (url.pathname === '/ball-purchases' && request.method === 'POST') return await addBallPurchase(env, await request.json(), origin);
+            if (url.pathname.startsWith('/ball-purchases/') && request.method === 'DELETE') {
+                const id = url.pathname.replace('/ball-purchases/', '');
+                return await deleteBallPurchase(env, id, origin);
+            }
+
+            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id'] }, origin);
         } catch (error) {
             return jsonResp({ success: false, error: error.message, stack: error.stack }, origin, 500);
         }
@@ -258,4 +267,44 @@ async function handleLogin(body, origin) {
         loginStatus: loginResp.status,
         debug: responseHtml.substring(0, 1500),
     }, origin);
+}
+
+// === 買球記帳 API 處理函數 ===
+const BALL_KV_KEY = 'ball_purchases';
+
+async function getBallPurchases(env, origin) {
+    const raw = await env.BALL_KV.get(BALL_KV_KEY);
+    const purchases = raw ? JSON.parse(raw) : [];
+    return jsonResp({ success: true, purchases }, origin);
+}
+
+async function addBallPurchase(env, body, origin) {
+    const { buyer, brand, qty, amount, date, note } = body;
+    if (!buyer || !amount) {
+        return jsonResp({ success: false, error: '缺少必要欄位（buyer, amount）' }, origin, 400);
+    }
+    const raw = await env.BALL_KV.get(BALL_KV_KEY);
+    const purchases = raw ? JSON.parse(raw) : [];
+    const newRecord = {
+        id: Date.now().toString(),
+        buyer,
+        brand: brand || '',
+        qty: qty || 1,
+        amount: Number(amount),
+        date: date || new Date().toISOString().slice(0, 10),
+        note: note || '',
+        createdAt: new Date().toISOString(),
+    };
+    purchases.unshift(newRecord); // 最新的放最前面
+    await env.BALL_KV.put(BALL_KV_KEY, JSON.stringify(purchases));
+    return jsonResp({ success: true, record: newRecord }, origin);
+}
+
+async function deleteBallPurchase(env, id, origin) {
+    if (!id) return jsonResp({ success: false, error: '缺少 id' }, origin, 400);
+    const raw = await env.BALL_KV.get(BALL_KV_KEY);
+    const purchases = raw ? JSON.parse(raw) : [];
+    const filtered = purchases.filter(p => p.id !== id);
+    await env.BALL_KV.put(BALL_KV_KEY, JSON.stringify(filtered));
+    return jsonResp({ success: true }, origin);
 }
