@@ -2671,21 +2671,31 @@
         function addTouchDrag(el, name, from) {
             let ghost = null;
             el.addEventListener('touchstart', e => {
+                if (e.target.classList.contains('tier-chip-remove')) return;
                 e.stopPropagation();
+                tierDragSource = { name, from };
                 const touch = e.touches[0];
                 ghost = el.cloneNode(true);
-                ghost.style.cssText = `position:fixed;pointer-events:none;z-index:9999;opacity:0.8;border-radius:20px;padding:7px 14px;background:#667eea;color:white;font-weight:bold;font-size:13px;transform:translate(-50%,-50%);left:${touch.clientX}px;top:${touch.clientY}px;`;
+                // 隱藏複製出來的按鈕避免干擾
+                const rmBtn = ghost.querySelector('.tier-chip-remove');
+                if (rmBtn) rmBtn.style.display = 'none';
+                
+                ghost.style.cssText = `position:fixed;pointer-events:none;z-index:9999;opacity:0.8;border-radius:20px;padding:7px 14px;background:#667eea;color:white;font-weight:bold;font-size:13px;transform:translate(-50%,-50%);left:${touch.clientX}px;top:${touch.clientY}px;box-shadow:0 10px 20px rgba(0,0,0,0.2);`;
                 document.body.appendChild(ghost);
                 el.classList.add('dragging-chip');
             }, { passive: true });
             el.addEventListener('touchmove', e => {
+                if (!ghost) return;
                 e.preventDefault();
                 const touch = e.touches[0];
-                if (ghost) { ghost.style.left = touch.clientX + 'px'; ghost.style.top = touch.clientY + 'px'; }
+                ghost.style.left = touch.clientX + 'px';
+                ghost.style.top = touch.clientY + 'px';
             }, { passive: false });
             el.addEventListener('touchend', e => {
+                if (!ghost) return; // 表示沒有成功啟動拖曳（可能是點到刪除按鈕）
                 el.classList.remove('dragging-chip');
-                if (ghost) { document.body.removeChild(ghost); ghost = null; }
+                document.body.removeChild(ghost);
+                ghost = null;
                 const touch = e.changedTouches[0];
                 const target = document.elementFromPoint(touch.clientX, touch.clientY);
                 const col = target && target.closest('.tier-col');
@@ -2696,6 +2706,7 @@
                     // 落在球員池上
                     const pool = target && target.closest('.player-pool-wrap');
                     if (pool && from !== 'unassigned') moveToUnassigned(name, from);
+                    tierDragSource = null;
                 }
             }, { passive: true });
         }
