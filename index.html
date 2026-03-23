@@ -1029,6 +1029,279 @@
             color: #999;
             padding: 30px;
         }
+
+        /* 個人花費摺疊區塊 */
+        .bp-person-summary-toggle {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 10px 0 6px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #667eea;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .bp-person-summary-toggle .toggle-arrow { transition: transform 0.3s; font-size: 12px; }
+        .bp-person-summary-toggle.open .toggle-arrow { transform: rotate(180deg); }
+        .bp-person-table-wrapper { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+        .bp-person-table-wrapper.open { max-height: 600px; }
+        .bp-person-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+        .bp-person-table th {
+            background: #f0f2ff;
+            color: #667eea;
+            padding: 6px 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .bp-person-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #444;
+        }
+        .bp-person-table tr:last-child td { border-bottom: none; }
+
+        /* === 分帳計算分頁 === */
+        .tier-page { display: flex; flex-direction: column; gap: 24px; }
+
+        /* 球員池 */
+        .player-pool-wrap {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px 18px;
+            border: 2px dashed #c5cae9;
+        }
+        .player-pool-wrap h3 { margin: 0 0 12px; font-size: 14px; color: #555; }
+        .player-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 40px;
+        }
+        .player-chip {
+            padding: 7px 14px;
+            border-radius: 20px;
+            background: #667eea;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.15s, box-shadow 0.15s;
+            white-space: nowrap;
+            touch-action: none;
+        }
+        .player-chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.35); }
+        .player-chip.dragging-chip { opacity: 0.45; transform: scale(0.95); }
+
+        /* 四個分級欄 */
+        .tier-columns {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 640px) { .tier-columns { grid-template-columns: repeat(2, 1fr); } }
+        .tier-col {
+            border-radius: 12px;
+            padding: 14px 12px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .tier-col.drag-over { box-shadow: 0 0 0 3px rgba(102,126,234,0.5); }
+        .tier-col[data-tier="S"] { background: #fff0f0; border: 2px solid #ff6b6b; }
+        .tier-col[data-tier="A"] { background: #fff7f0; border: 2px solid #ff9800; }
+        .tier-col[data-tier="B"] { background: #fffef0; border: 2px solid #ffc107; }
+        .tier-col[data-tier="C"] { background: #f0fff4; border: 2px solid #43a047; }
+        .tier-col.drag-over[data-tier="S"] { background: #ffe0e0; }
+        .tier-col.drag-over[data-tier="A"] { background: #ffe8cc; }
+        .tier-col.drag-over[data-tier="B"] { background: #fffacc; }
+        .tier-col.drag-over[data-tier="C"] { background: #d0f0d8; }
+        .tier-col-header { font-size: 15px; font-weight: bold; text-align: center; }
+        .tier-col[data-tier="S"] .tier-col-header { color: #d32f2f; }
+        .tier-col[data-tier="A"] .tier-col-header { color: #e64a19; }
+        .tier-col[data-tier="B"] .tier-col-header { color: #f57f17; }
+        .tier-col[data-tier="C"] .tier-col-header { color: #2e7d32; }
+        .tier-col-desc { font-size: 11px; color: #888; text-align: center; margin-top: -4px; }
+        .tier-chip-list { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+        .tier-chip {
+            padding: 5px 11px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.15s;
+        }
+        .tier-chip:hover { transform: translateY(-1px); }
+        .tier-col[data-tier="S"] .tier-chip { background: #ffcdd2; color: #b71c1c; }
+        .tier-col[data-tier="A"] .tier-chip { background: #ffe0b2; color: #bf360c; }
+        .tier-col[data-tier="B"] .tier-chip { background: #fff9c4; color: #f57f17; }
+        .tier-col[data-tier="C"] .tier-chip { background: #c8e6c9; color: #1b5e20; }
+        .tier-chip.dragging-chip { opacity: 0.4; }
+        .tier-chip-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            padding: 0 2px;
+            opacity: 0.5;
+            color: inherit;
+            flex-shrink: 0;
+        }
+        .tier-chip-remove:hover { opacity: 1; }
+
+        .tier-save-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .tier-save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; padding: 12px 28px;
+            border-radius: 10px; cursor: pointer; font-size: 15px;
+            font-weight: bold; transition: all 0.3s;
+        }
+        .tier-save-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(102,126,234,0.4); }
+        .tier-save-msg { font-size: 13px; color: #43a047; font-weight: bold; opacity: 0; transition: opacity 0.4s; }
+        .tier-save-msg.show { opacity: 1; }
+
+        /* 分帳計算器 */
+        .split-calc-section {
+            background: #f8f9fa;
+            border-radius: 14px;
+            padding: 20px 22px;
+            border: 1px solid #e9ecef;
+        }
+        .split-calc-section h3 { margin: 0 0 16px; color: #333; font-size: 16px; }
+        .split-input-row {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+        }
+        .split-input-row label { font-size: 14px; font-weight: bold; color: #555; min-width: 90px; }
+        .split-input-row input[type="number"] {
+            width: 110px; padding: 9px 12px; border: 2px solid #ddd;
+            border-radius: 8px; font-size: 15px; text-align: right;
+            transition: border-color 0.2s; box-sizing: border-box;
+        }
+        .split-input-row input[type="number"]:focus { border-color: #667eea; outline: none; }
+        .split-year-badge {
+            font-size: 12px; color: #667eea; background: #eef0ff;
+            padding: 3px 10px; border-radius: 12px;
+        }
+        .split-weights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .split-weight-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .split-weight-item label { font-size: 13px; font-weight: bold; }
+        .split-weight-item[data-tier="S"] { border-color: #ff6b6b; }
+        .split-weight-item[data-tier="A"] { border-color: #ff9800; }
+        .split-weight-item[data-tier="B"] { border-color: #ffc107; }
+        .split-weight-item[data-tier="C"] { border-color: #43a047; }
+        .split-weight-item[data-tier="S"] label { color: #d32f2f; }
+        .split-weight-item[data-tier="A"] label { color: #e64a19; }
+        .split-weight-item[data-tier="B"] label { color: #f57f17; }
+        .split-weight-item[data-tier="C"] label { color: #2e7d32; }
+        .split-weight-row { display: flex; align-items: center; gap: 8px; }
+        .split-weight-row input[type="range"] { flex: 1; accent-color: #667eea; cursor: pointer; }
+        .split-weight-num {
+            width: 48px; padding: 5px 8px; border: 2px solid #ddd;
+            border-radius: 6px; font-size: 14px; text-align: center;
+            font-weight: bold;
+        }
+        .split-count-row { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #666; }
+        .split-count-row input[type="number"] {
+            width: 52px; padding: 4px 7px; border: 2px solid #ddd;
+            border-radius: 6px; font-size: 13px; text-align: center;
+        }
+
+        /* 計算結果 */
+        .split-result {
+            background: white;
+            border-radius: 12px;
+            padding: 18px 20px;
+            border: 2px solid #667eea;
+            margin-top: 8px;
+        }
+        .split-result-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+        }
+        .split-unit-price {
+            font-size: 14px; color: #666;
+        }
+        .split-unit-price span { font-size: 18px; font-weight: bold; color: #667eea; }
+        .split-tier-results { display: flex; flex-direction: column; gap: 10px; }
+        .split-tier-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        .split-tier-row[data-tier="S"] { background: #fff5f5; }
+        .split-tier-row[data-tier="A"] { background: #fff8f0; }
+        .split-tier-row[data-tier="B"] { background: #fffef0; }
+        .split-tier-row[data-tier="C"] { background: #f5fff7; }
+        .split-tier-badge {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px; flex-shrink: 0;
+        }
+        .split-tier-row[data-tier="S"] .split-tier-badge { background: #ff6b6b; color: white; }
+        .split-tier-row[data-tier="A"] .split-tier-badge { background: #ff9800; color: white; }
+        .split-tier-row[data-tier="B"] .split-tier-badge { background: #ffc107; color: white; }
+        .split-tier-row[data-tier="C"] .split-tier-badge { background: #43a047; color: white; }
+        .split-tier-info { flex: 1; min-width: 100px; }
+        .split-tier-name { font-size: 13px; color: #666; }
+        .split-per-person {
+            font-size: 1.3em; font-weight: bold; color: #333;
+            white-space: nowrap;
+        }
+        .split-detail-toggle {
+            background: none; border: 1px solid #ddd;
+            border-radius: 6px; padding: 4px 10px;
+            font-size: 12px; cursor: pointer; color: #666;
+            white-space: nowrap;
+        }
+        .split-name-list {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.3s;
+            width: 100%; flex-basis: 100%;
+        }
+        .split-name-list.open { max-height: 200px; }
+        .split-name-list-inner {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 8px 0 2px;
+        }
+        .split-name-chip {
+            font-size: 12px; padding: 3px 10px;
+            border-radius: 12px; background: #eef0ff; color: #667eea;
+        }
+        .split-total-check {
+            margin-top: 14px; padding-top: 12px;
+            border-top: 2px dashed #eee;
+            font-size: 13px; color: #888; text-align: right;
+        }
+        .split-total-check b { color: #333; }
     </style>
 </head>
 
@@ -1043,6 +1316,7 @@
             <!-- 新增：計分板按鈕 -->
             <button class="tab" onclick="showTab('scoreboard')">🏆 計分板</button>
             <button class="tab" onclick="showTab('ballpurchase')">🛒 買球記帳</button>
+            <button class="tab" onclick="showTab('splitcalc')">💰 分帳計算</button>
         </div>
 
         <div id="generator" class="tab-content active">
@@ -1241,6 +1515,124 @@
 
                 <!-- 記錄列表 -->
                 <div id="bp-list"><div class="bp-loading">⏳ 載入中...</div></div>
+            </div>
+        </div>
+
+        <!-- 分帳計算分頁 -->
+        <div id="splitcalc" class="tab-content">
+            <div class="section tier-page">
+                <h2>💰 分帳計算</h2>
+
+                <!-- 球員池 -->
+                <div class="player-pool-wrap">
+                    <h3>👥 待分級球員（拖曳到下方區間）</h3>
+                    <div class="player-pool" id="tier-pool"></div>
+                </div>
+
+                <!-- 四個區間 -->
+                <div class="tier-columns">
+                    <div class="tier-col" id="tier-col-S" data-tier="S"
+                         ondragover="tierDragOver(event)" ondragleave="tierDragLeave(event)" ondrop="tierDrop(event,'S')">
+                        <div class="tier-col-header">🔴 S 級</div>
+                        <div class="tier-col-desc">100 次以上／年</div>
+                        <div class="tier-chip-list" id="tier-list-S"></div>
+                    </div>
+                    <div class="tier-col" id="tier-col-A" data-tier="A"
+                         ondragover="tierDragOver(event)" ondragleave="tierDragLeave(event)" ondrop="tierDrop(event,'A')">
+                        <div class="tier-col-header">🟠 A 級</div>
+                        <div class="tier-col-desc">50 ～ 100 次／年</div>
+                        <div class="tier-chip-list" id="tier-list-A"></div>
+                    </div>
+                    <div class="tier-col" id="tier-col-B" data-tier="B"
+                         ondragover="tierDragOver(event)" ondragleave="tierDragLeave(event)" ondrop="tierDrop(event,'B')">
+                        <div class="tier-col-header">🟡 B 級</div>
+                        <div class="tier-col-desc">20 ～ 50 次／年</div>
+                        <div class="tier-chip-list" id="tier-list-B"></div>
+                    </div>
+                    <div class="tier-col" id="tier-col-C" data-tier="C"
+                         ondragover="tierDragOver(event)" ondragleave="tierDragLeave(event)" ondrop="tierDrop(event,'C')">
+                        <div class="tier-col-header">🟢 C 級</div>
+                        <div class="tier-col-desc">20 次以下／年</div>
+                        <div class="tier-chip-list" id="tier-list-C"></div>
+                    </div>
+                </div>
+
+                <!-- 儲存按鈕 -->
+                <div class="tier-save-row">
+                    <button class="tier-save-btn" onclick="saveTiers()">💾 儲存分級</button>
+                    <span class="tier-save-msg" id="tier-save-msg">✅ 已儲存！</span>
+                </div>
+
+                <hr style="border:none;border-top:2px solid #eee;margin:0;">
+
+                <!-- 分帳計算器 -->
+                <div class="split-calc-section">
+                    <h3>🧮 分帳計算機</h3>
+
+                    <div class="split-input-row">
+                        <label>年度費用</label>
+                        <input type="number" id="split-total" value="21000" min="0" oninput="updateSplitCalc()">
+                        <span class="split-year-badge" id="split-year-badge">2026 年</span>
+                    </div>
+
+                    <!-- 份數權重調整 (四個級別) -->
+                    <div class="split-weights-grid">
+                        <div class="split-weight-item" data-tier="S">
+                            <label>🔴 S 級份數</label>
+                            <div class="split-weight-row">
+                                <input type="range" id="weight-S" min="1" max="20" value="10" oninput="syncWeight('S')">
+                                <input type="number" id="weight-S-num" class="split-weight-num" value="10" min="1" max="20" oninput="syncWeightNum('S')">
+                            </div>
+                            <div class="split-count-row">
+                                人數：<input type="number" id="count-S" class="split-weight-num" value="0" min="0" oninput="updateSplitCalc()">
+                                <span id="count-S-names" style="font-size:11px;color:#aaa;"></span>
+                            </div>
+                        </div>
+                        <div class="split-weight-item" data-tier="A">
+                            <label>🟠 A 級份數</label>
+                            <div class="split-weight-row">
+                                <input type="range" id="weight-A" min="1" max="20" value="6" oninput="syncWeight('A')">
+                                <input type="number" id="weight-A-num" class="split-weight-num" value="6" min="1" max="20" oninput="syncWeightNum('A')">
+                            </div>
+                            <div class="split-count-row">
+                                人數：<input type="number" id="count-A" class="split-weight-num" value="0" min="0" oninput="updateSplitCalc()">
+                                <span id="count-A-names" style="font-size:11px;color:#aaa;"></span>
+                            </div>
+                        </div>
+                        <div class="split-weight-item" data-tier="B">
+                            <label>🟡 B 級份數</label>
+                            <div class="split-weight-row">
+                                <input type="range" id="weight-B" min="1" max="20" value="3" oninput="syncWeight('B')">
+                                <input type="number" id="weight-B-num" class="split-weight-num" value="3" min="1" max="20" oninput="syncWeightNum('B')">
+                            </div>
+                            <div class="split-count-row">
+                                人數：<input type="number" id="count-B" class="split-weight-num" value="0" min="0" oninput="updateSplitCalc()">
+                                <span id="count-B-names" style="font-size:11px;color:#aaa;"></span>
+                            </div>
+                        </div>
+                        <div class="split-weight-item" data-tier="C">
+                            <label>🟢 C 級份數</label>
+                            <div class="split-weight-row">
+                                <input type="range" id="weight-C" min="1" max="20" value="1" oninput="syncWeight('C')">
+                                <input type="number" id="weight-C-num" class="split-weight-num" value="1" min="1" max="20" oninput="syncWeightNum('C')">
+                            </div>
+                            <div class="split-count-row">
+                                人數：<input type="number" id="count-C" class="split-weight-num" value="0" min="0" oninput="updateSplitCalc()">
+                                <span id="count-C-names" style="font-size:11px;color:#aaa;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 計算結果 -->
+                    <div class="split-result">
+                        <div class="split-result-header">
+                            <b>📊 分帳結果</b>
+                            <div class="split-unit-price">每份：<span id="split-unit">—</span> 元</div>
+                        </div>
+                        <div class="split-tier-results" id="split-tier-results"></div>
+                        <div class="split-total-check" id="split-total-check"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2052,20 +2444,54 @@
             // 年份降冪排列（最新在前）
             const sortedYears = Object.keys(byYear).sort((a, b) => b.localeCompare(a));
 
-            // 渲染年度合計卡片
+            // 渲染年度合計卡片 + 個人花費明細
             summaryEl.innerHTML = '';
-            const summaryRow = document.createElement('div');
-            summaryRow.className = 'bp-summary';
             sortedYears.forEach(year => {
                 const recs = byYear[year];
                 const yearTotal = recs.reduce((s, p) => s + Number(p.amount), 0);
-                summaryRow.innerHTML += `
-                    <div class="bp-summary-card">
-                        <div class="bp-summary-label">${year} 年（${recs.length} 筆）</div>
-                        <div class="bp-summary-value">$${yearTotal.toLocaleString()}</div>
+
+                // 個人分組統計
+                const byPerson = {};
+                recs.forEach(p => {
+                    byPerson[p.buyer] = (byPerson[p.buyer] || 0) + Number(p.amount);
+                });
+                const sortedPersons = Object.entries(byPerson).sort((a, b) => b[1] - a[1]);
+
+                const uid = 'person-' + year;
+                const cardWrap = document.createElement('div');
+                cardWrap.style.cssText = 'margin-bottom:16px;';
+                cardWrap.innerHTML = `
+                    <div class="bp-summary" style="margin-bottom:4px;">
+                        <div class="bp-summary-card">
+                            <div class="bp-summary-label">${year} 年（${recs.length} 筆）</div>
+                            <div class="bp-summary-value">$${yearTotal.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <button class="bp-person-summary-toggle" id="toggle-${uid}" onclick="togglePersonSummary('${uid}')">
+                        <span>👤 個人花費明細</span><span class="toggle-arrow">▼</span>
+                    </button>
+                    <div class="bp-person-table-wrapper" id="wrap-${uid}">
+                        <table class="bp-person-table">
+                            <thead><tr><th>購買者</th><th style="text-align:right;">累計金額</th><th style="text-align:right;">占比</th></tr></thead>
+                            <tbody>${sortedPersons.map(([name, amt]) =>
+                                `<tr><td>${name}</td><td style="text-align:right;color:#667eea;font-weight:bold;">$${amt.toLocaleString()}</td><td style="text-align:right;color:#aaa;">${Math.round(amt / yearTotal * 100)}%</td></tr>`
+                            ).join('')}</tbody>
+                        </table>
                     </div>`;
+                summaryEl.appendChild(cardWrap);
+
+                // 更新分帳計算的年度費用（抓最新年度）
+                if (year === sortedYears[0]) {
+                    const splitTotalEl = document.getElementById('split-total');
+                    if (splitTotalEl && (splitTotalEl.dataset.autoSet !== 'true' || splitTotalEl.dataset.autoYear !== year)) {
+                        splitTotalEl.value = yearTotal;
+                        splitTotalEl.dataset.autoSet = 'true';
+                        splitTotalEl.dataset.autoYear = year;
+                        document.getElementById('split-year-badge').textContent = year + ' 年';
+                        updateSplitCalc();
+                    }
+                }
             });
-            summaryEl.appendChild(summaryRow);
 
             // 渲染分年度記錄列表
             listEl.innerHTML = '';
@@ -2100,7 +2526,291 @@
             });
         }
 
+        function togglePersonSummary(uid) {
+            const btn = document.getElementById('toggle-' + uid);
+            const wrap = document.getElementById('wrap-' + uid);
+            btn.classList.toggle('open');
+            wrap.classList.toggle('open');
+        }
+
         // === 買球記帳函數結束 ===
+
+        // ============================================
+        // === 分級量表 + 分帳計算 ===
+        // ============================================
+
+        // 目前的分級資料 { S:[], A:[], B:[], C:[], unassigned:[] }
+        let tierData = { S: [], A: [], B: [], C: [], unassigned: [] };
+        let tierDragSource = null; // { name, fromZone } 'pool' | 'S' | 'A' | 'B' | 'C'
+
+        // 初始化分級量表分頁
+        async function initSplitCalcTab() {
+            // 從後端讀取分級資料
+            try {
+                const resp = await fetch(`${WORKER_URL}/frequency-tiers`);
+                const data = await resp.json();
+                if (data.success) {
+                    tierData = data.tiers;
+                    // 確保 unassigned 包含所有球員
+                    const allNames = players.map(p => p.label);
+                    const assigned = [...tierData.S, ...tierData.A, ...tierData.B, ...tierData.C, ...(tierData.unassigned || [])];
+                    // 加入尚未在任何分組的球員
+                    allNames.forEach(n => {
+                        if (!assigned.includes(n)) tierData.unassigned.push(n);
+                    });
+                    // 移除已不在球員名單的名字
+                    ['S','A','B','C','unassigned'].forEach(k => {
+                        tierData[k] = (tierData[k] || []).filter(n => allNames.includes(n));
+                    });
+                } else {
+                    tierData.unassigned = players.map(p => p.label);
+                }
+            } catch {
+                tierData.unassigned = players.map(p => p.label);
+            }
+            renderTiers();
+            updateSplitCalcCounts();
+        }
+
+        function renderTiers() {
+            // 渲染球員池
+            const pool = document.getElementById('tier-pool');
+            pool.innerHTML = '';
+            (tierData.unassigned || []).forEach(name => {
+                pool.appendChild(makePoolChip(name));
+            });
+
+            // 渲染四個區間
+            ['S','A','B','C'].forEach(tier => {
+                const listEl = document.getElementById('tier-list-' + tier);
+                listEl.innerHTML = '';
+                (tierData[tier] || []).forEach(name => {
+                    listEl.appendChild(makeTierChip(name, tier));
+                });
+            });
+        }
+
+        function makePoolChip(name) {
+            const chip = document.createElement('div');
+            chip.className = 'player-chip';
+            chip.textContent = name;
+            chip.draggable = true;
+            chip.addEventListener('dragstart', e => {
+                tierDragSource = { name, from: 'unassigned' };
+                setTimeout(() => chip.classList.add('dragging-chip'), 0);
+            });
+            chip.addEventListener('dragend', () => chip.classList.remove('dragging-chip'));
+            // 觸控支援
+            addTouchDrag(chip, name, 'unassigned');
+            return chip;
+        }
+
+        function makeTierChip(name, tier) {
+            const chip = document.createElement('div');
+            chip.className = 'tier-chip';
+            chip.style.cssText = 'display:flex;align-items:center;gap:5px;padding-right:6px;';
+            chip.draggable = true;
+            chip.addEventListener('dragstart', e => {
+                if (e.target.classList.contains('tier-chip-remove')) { e.preventDefault(); return; }
+                tierDragSource = { name, from: tier };
+                setTimeout(() => chip.classList.add('dragging-chip'), 0);
+            });
+            chip.addEventListener('dragend', () => chip.classList.remove('dragging-chip'));
+
+            const label = document.createElement('span');
+            label.textContent = name;
+            label.style.flex = '1';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'tier-chip-remove';
+            removeBtn.textContent = '×';
+            removeBtn.title = '移回待分級';
+            removeBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                moveToUnassigned(name, tier);
+            });
+
+            chip.appendChild(label);
+            chip.appendChild(removeBtn);
+            addTouchDrag(chip, name, tier);
+            return chip;
+        }
+
+        function moveToUnassigned(name, from) {
+            tierData[from] = tierData[from].filter(n => n !== name);
+            tierData.unassigned.push(name);
+            renderTiers();
+            updateSplitCalcCounts();
+        }
+
+        // Drag-over / Drop 處理
+        function tierDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        function tierDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        function tierDrop(e, targetTier) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!tierDragSource) return;
+            const { name, from } = tierDragSource;
+            if (from === targetTier) return;
+            // 從原來的地方移除
+            if (from === 'unassigned') tierData.unassigned = tierData.unassigned.filter(n => n !== name);
+            else tierData[from] = tierData[from].filter(n => n !== name);
+            // 加到目標
+            tierData[targetTier].push(name);
+            tierDragSource = null;
+            renderTiers();
+            updateSplitCalcCounts();
+        }
+
+        // 觸控拖曳（手機支援）
+        function addTouchDrag(el, name, from) {
+            let ghost = null;
+            el.addEventListener('touchstart', e => {
+                e.stopPropagation();
+                const touch = e.touches[0];
+                ghost = el.cloneNode(true);
+                ghost.style.cssText = `position:fixed;pointer-events:none;z-index:9999;opacity:0.8;border-radius:20px;padding:7px 14px;background:#667eea;color:white;font-weight:bold;font-size:13px;transform:translate(-50%,-50%);left:${touch.clientX}px;top:${touch.clientY}px;`;
+                document.body.appendChild(ghost);
+                el.classList.add('dragging-chip');
+            }, { passive: true });
+            el.addEventListener('touchmove', e => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                if (ghost) { ghost.style.left = touch.clientX + 'px'; ghost.style.top = touch.clientY + 'px'; }
+            }, { passive: false });
+            el.addEventListener('touchend', e => {
+                el.classList.remove('dragging-chip');
+                if (ghost) { document.body.removeChild(ghost); ghost = null; }
+                const touch = e.changedTouches[0];
+                const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                const col = target && target.closest('.tier-col');
+                if (col) {
+                    const targetTier = col.dataset.tier;
+                    tierDrop({ preventDefault:()=>{}, currentTarget: col }, targetTier);
+                } else {
+                    // 落在球員池上
+                    const pool = target && target.closest('.player-pool-wrap');
+                    if (pool && from !== 'unassigned') moveToUnassigned(name, from);
+                }
+            }, { passive: true });
+        }
+
+        // 儲存分級到後端
+        async function saveTiers() {
+            try {
+                const resp = await fetch(`${WORKER_URL}/frequency-tiers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(tierData)
+                });
+                const data = await resp.json();
+                const msg = document.getElementById('tier-save-msg');
+                if (data.success) {
+                    msg.textContent = '✅ 已儲存！';
+                } else {
+                    msg.textContent = '❌ 儲存失敗';
+                }
+                msg.classList.add('show');
+                setTimeout(() => msg.classList.remove('show'), 2500);
+            } catch {
+                alert('無法連接後端，請確認 Worker 已更新！');
+            }
+        }
+
+        // ============================================
+        // === 分帳計算機 ===
+        // ============================================
+        const TIERS = ['S','A','B','C'];
+        const TIER_LABELS = { S:'🔴 S 級', A:'🟠 A 級', B:'🟡 B 級', C:'🟢 C 級' };
+        const TIER_DESCS = { S:'100次以上', A:'50～100次', B:'20～50次', C:'20次以下' };
+
+        function syncWeight(tier) {
+            const val = document.getElementById('weight-' + tier).value;
+            document.getElementById('weight-' + tier + '-num').value = val;
+            updateSplitCalc();
+        }
+        function syncWeightNum(tier) {
+            const val = document.getElementById('weight-' + tier + '-num').value;
+            document.getElementById('weight-' + tier).value = val;
+            updateSplitCalc();
+        }
+
+        function updateSplitCalcCounts() {
+            TIERS.forEach(tier => {
+                const names = tierData[tier] || [];
+                document.getElementById('count-' + tier).value = names.length;
+                document.getElementById('count-' + tier + '-names').textContent = names.length > 0 ? '(' + names.slice(0,3).join('、') + (names.length > 3 ? '…' : '') + ')' : '';
+            });
+            updateSplitCalc();
+        }
+
+        function updateSplitCalc() {
+            const total = parseFloat(document.getElementById('split-total').value) || 0;
+            const weights = {};
+            const counts = {};
+            TIERS.forEach(t => {
+                weights[t] = parseFloat(document.getElementById('weight-' + t + '-num').value) || 0;
+                counts[t] = parseInt(document.getElementById('count-' + t).value) || 0;
+            });
+
+            // 總份數 = Σ(每級人數 × 份數)
+            const totalShares = TIERS.reduce((s, t) => s + counts[t] * weights[t], 0);
+            const unitPrice = totalShares > 0 ? total / totalShares : 0;
+
+            document.getElementById('split-unit').textContent = totalShares > 0 ? unitPrice.toFixed(1) : '—';
+
+            const resultsEl = document.getElementById('split-tier-results');
+            resultsEl.innerHTML = '';
+            let grandTotal = 0;
+
+            TIERS.forEach(tier => {
+                const w = weights[tier];
+                const cnt = counts[tier];
+                const perPerson = unitPrice * w;
+                grandTotal += perPerson * cnt;
+
+                const names = tierData[tier] || [];
+                const rowId = 'split-row-' + tier;
+
+                const row = document.createElement('div');
+                row.className = 'split-tier-row';
+                row.dataset.tier = tier;
+                row.innerHTML = `
+                    <div class="split-tier-badge">${tier}</div>
+                    <div class="split-tier-info">
+                        <div class="split-tier-name">${TIER_LABELS[tier]}（${TIER_DESCS[tier]}）· ${cnt} 人 · ${w} 份</div>
+                    </div>
+                    <div class="split-per-person">${cnt > 0 && totalShares > 0 ? '$' + Math.round(perPerson).toLocaleString() : '—'}</div>
+                    ${names.length > 0 ? `<button class="split-detail-toggle" onclick="toggleSplitNames('${tier}')" id="toggle-details-${tier}">名單 ▼</button>` : ''}
+                    <div class="split-name-list" id="split-names-${tier}">
+                        <div class="split-name-list-inner">${names.map(n => `<span class="split-name-chip">${n}</span>`).join('')}</div>
+                    </div>`;
+                resultsEl.appendChild(row);
+            });
+
+            // 驗算
+            const checkEl = document.getElementById('split-total-check');
+            if (totalShares > 0) {
+                const diff = Math.abs(grandTotal - total);
+                checkEl.innerHTML = `全體合計：<b>$${Math.round(grandTotal).toLocaleString()}</b>　目標：<b>$${total.toLocaleString()}</b>　差異：<b>${diff < 1 ? '✅ 無差異' : '≈ $' + diff.toFixed(0)}</b>`;
+            } else {
+                checkEl.innerHTML = '';
+            }
+        }
+
+        function toggleSplitNames(tier) {
+            const el = document.getElementById('split-names-' + tier);
+            const btn = document.getElementById('toggle-details-' + tier);
+            el.classList.toggle('open');
+            btn.textContent = el.classList.contains('open') ? '名單 ▲' : '名單 ▼';
+        }
+
+        // === 分帳計算結束 ===
 
         // 分頁切換
         function showTab(tabName) {
@@ -2110,10 +2820,11 @@
             event.currentTarget.classList.add('active');
 
             if (tabName === 'tactical') {
-                // 延遲初始化戰術板，確保DOM已渲染
-                setTimeout(() => {
-                    recalculatePlayerPositions();
-                }, 100);
+                setTimeout(() => recalculatePlayerPositions(), 100);
+            }
+            if (tabName === 'splitcalc') {
+                // 延遲一下確保 DOM 已顯示
+                setTimeout(() => initSplitCalcTab(), 50);
             }
         }
 
@@ -2125,6 +2836,7 @@
             initTacticalBoard();
             initScoreboard();
             initBallPurchase();
+            updateSplitCalc(); // 預先渲染計算結果
         });
 
         // 視窗大小改變時重新調整圓點位置

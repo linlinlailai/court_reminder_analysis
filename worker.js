@@ -63,7 +63,11 @@ export default {
                 return await deleteBallPurchase(env, id, origin);
             }
 
-            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id'] }, origin);
+            // === 打球頻率分級 API ===
+            if (url.pathname === '/frequency-tiers' && request.method === 'GET') return await getFrequencyTiers(env, origin);
+            if (url.pathname === '/frequency-tiers' && request.method === 'POST') return await saveFrequencyTiers(env, await request.json(), origin);
+
+            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id', 'GET /frequency-tiers', 'POST /frequency-tiers'] }, origin);
         } catch (error) {
             return jsonResp({ success: false, error: error.message, stack: error.stack }, origin, 500);
         }
@@ -306,5 +310,23 @@ async function deleteBallPurchase(env, id, origin) {
     const purchases = raw ? JSON.parse(raw) : [];
     const filtered = purchases.filter(p => p.id !== id);
     await env.BALL_KV.put(BALL_KV_KEY, JSON.stringify(filtered));
+    return jsonResp({ success: true }, origin);
+}
+
+// === 打球頻率分級 API 處理函數 ===
+const TIER_KV_KEY = 'frequency_tiers';
+
+async function getFrequencyTiers(env, origin) {
+    const raw = await env.BALL_KV.get(TIER_KV_KEY);
+    const tiers = raw ? JSON.parse(raw) : { S: [], A: [], B: [], C: [], unassigned: [] };
+    return jsonResp({ success: true, tiers }, origin);
+}
+
+async function saveFrequencyTiers(env, body, origin) {
+    // body 格式：{ S: [...], A: [...], B: [...], C: [...], unassigned: [...] }
+    if (!body || typeof body !== 'object') {
+        return jsonResp({ success: false, error: '格式錯誤' }, origin, 400);
+    }
+    await env.BALL_KV.put(TIER_KV_KEY, JSON.stringify(body));
     return jsonResp({ success: true }, origin);
 }
