@@ -71,7 +71,15 @@ export default {
             if (url.pathname === '/payment-status' && request.method === 'GET') return await getPaymentStatus(env, origin);
             if (url.pathname === '/payment-status' && request.method === 'POST') return await savePaymentStatus(env, await request.json(), origin);
 
-            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id', 'GET /frequency-tiers', 'POST /frequency-tiers', 'GET /payment-status', 'POST /payment-status'] }, origin);
+            // === 公帳紀錄 API ===
+            if (url.pathname === '/public-account' && request.method === 'GET') return await getPublicAccount(env, origin);
+            if (url.pathname === '/public-account' && request.method === 'POST') return await addPublicAccountRecord(env, await request.json(), origin);
+            if (url.pathname.startsWith('/public-account/') && request.method === 'DELETE') {
+                const id = url.pathname.replace('/public-account/', '');
+                return await deletePublicAccountRecord(env, id, origin);
+            }
+
+            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id', 'GET /frequency-tiers', 'POST /frequency-tiers', 'GET /payment-status', 'POST /payment-status', 'GET /public-account', 'POST /public-account', 'DELETE /public-account/:id'] }, origin);
         } catch (error) {
             return jsonResp({ success: false, error: error.message, stack: error.stack }, origin, 500);
         }
@@ -350,5 +358,47 @@ async function savePaymentStatus(env, body, origin) {
         return jsonResp({ success: false, error: '格式錯誤' }, origin, 400);
     }
     await env.BALL_KV.put(PAYMENT_KV_KEY, JSON.stringify(body));
+    return jsonResp({ success: true }, origin);
+}
+
+// === 公帳紀錄 API 處理函數 ===
+const PUBLIC_ACCOUNT_KV_KEY = 'public_account';
+
+async function getPublicAccount(env, origin) {
+    const raw = await env.BALL_KV.get(PUBLIC_ACCOUNT_KV_KEY);
+    const records = raw ? JSON.parse(raw) : [];
+    return jsonResp({ success: true, records }, origin);
+}
+
+async function addPublicAccountRecord(env, body, origin) {
+    const { date, type, description, amount, note } = body;
+    if (!type || !description || !amount) {
+        return jsonResp({ success: false, error: '缺少必要欄位（type, description, amount）' }, origin, 400);
+    }
+    if (type !== 'income' && type !== 'expense') {
+        return jsonResp({ success: false, error: 'type 必須為 income 或 expense' }, origin, 400);
+    }
+    const raw = await env.BALL_KV.get(PUBLIC_ACCOUNT_KV_KEY);
+    const records = raw ? JSON.parse(raw) : [];
+    const newRecord = {
+        id: Date.now().toString(),
+        date: date || new Date().toISOString().slice(0, 10),
+        type,
+        description,
+        amount: Number(amount),
+        note: note || '',
+        createdAt: new Date().toISOString(),
+    };
+    records.unshift(newRecord);
+    await env.BALL_KV.put(PUBLIC_ACCOUNT_KV_KEY, JSON.stringify(records));
+    return jsonResp({ success: true, record: newRecord }, origin);
+}
+
+async function deletePublicAccountRecord(env, id, origin) {
+    if (!id) return jsonResp({ success: false, error: '缺少 id' }, origin, 400);
+    const raw = await env.BALL_KV.get(PUBLIC_ACCOUNT_KV_KEY);
+    const records = raw ? JSON.parse(raw) : [];
+    const filtered = records.filter(r => r.id !== id);
+    await env.BALL_KV.put(PUBLIC_ACCOUNT_KV_KEY, JSON.stringify(filtered));
     return jsonResp({ success: true }, origin);
 }

@@ -1030,6 +1030,115 @@
             padding: 30px;
         }
 
+        /* 公帳紀錄 */
+        .pa-balance-wrap {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.3);
+        }
+
+        .pa-balance-wrap.negative {
+            background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.3);
+        }
+
+        .pa-balance-label {
+            color: rgba(255,255,255,0.85);
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .pa-balance-amount {
+            color: white;
+            font-size: 2.8em;
+            font-weight: bold;
+        }
+
+        .pa-type-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pa-type-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .pa-type-btn.pa-type-income.active {
+            background: #38a169;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .pa-type-btn.pa-type-expense.active {
+            background: #e53e3e;
+            color: white;
+            border-color: #e53e3e;
+        }
+
+        .pa-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pa-record {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-left: 5px solid #38a169;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .pa-record.expense {
+            border-left-color: #e53e3e;
+        }
+
+        .pa-record-info { flex: 1; }
+
+        .pa-record-desc {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .pa-record-date {
+            font-size: 13px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .pa-record-amount {
+            font-size: 1.4em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pa-record-amount.income { color: #38a169; }
+        .pa-record-amount.expense { color: #e53e3e; }
+
+        .pa-record-balance {
+            font-size: 13px;
+            color: #888;
+            text-align: right;
+            white-space: nowrap;
+        }
+
         /* 個人花費摺疊區塊 */
         .bp-person-summary-toggle {
             background: none;
@@ -1338,6 +1447,7 @@
             <button class="tab" onclick="showTab('scoreboard')">🏆 計分板</button>
             <button class="tab" onclick="showTab('ballpurchase')">🛒 買球記帳</button>
             <button class="tab" onclick="showTab('splitcalc')">💰 分帳計算</button>
+            <button class="tab" onclick="showTab('publicaccount')">📒 公帳紀錄</button>
         </div>
 
         <div id="generator" class="tab-content active">
@@ -1653,6 +1763,53 @@
                         <div class="split-total-check" id="split-total-check"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- 公帳紀錄分頁 -->
+        <div id="publicaccount" class="tab-content">
+            <div class="section">
+                <h2>📒 公帳紀錄</h2>
+
+                <!-- 餘額卡片 -->
+                <div id="pa-balance-card" class="pa-balance-wrap">
+                    <div class="pa-balance-label">目前公帳餘額</div>
+                    <div class="pa-balance-amount" id="pa-balance-amount">載入中...</div>
+                </div>
+
+                <!-- 新增表單 -->
+                <div class="bp-form">
+                    <h3>➕ 新增一筆</h3>
+                    <div>
+                        <label style="font-weight:bold;font-size:13px;color:#555;display:block;margin-bottom:8px;">💱 類型</label>
+                        <div class="pa-type-toggle">
+                            <button id="pa-type-income" class="pa-type-btn pa-type-income active" onclick="selectPaType('income')">💰 收入</button>
+                            <button id="pa-type-expense" class="pa-type-btn pa-type-expense" onclick="selectPaType('expense')">💸 支出</button>
+                        </div>
+                    </div>
+                    <div class="bp-form-grid">
+                        <div class="form-group">
+                            <label>📅 日期</label>
+                            <input type="date" id="pa-date">
+                        </div>
+                        <div class="form-group">
+                            <label>📝 名目</label>
+                            <input type="text" id="pa-description" placeholder="例: 小明多付、場地費">
+                        </div>
+                        <div class="form-group">
+                            <label>💰 金額（元）</label>
+                            <input type="number" id="pa-amount" placeholder="例: 200" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>🗒 備註</label>
+                            <input type="text" id="pa-note" placeholder="選填">
+                        </div>
+                    </div>
+                    <button class="bp-add-btn" id="pa-add-btn" onclick="addPublicAccountRecord()">新增記錄</button>
+                </div>
+
+                <!-- 記錄列表 -->
+                <div id="pa-list"><div class="bp-loading">⏳ 載入中...</div></div>
             </div>
         </div>
     </div>
@@ -2944,6 +3101,136 @@
 
         // === 分帳計算結束 ===
 
+        // === 公帳紀錄 ===
+        let paSelectedType = 'income';
+
+        function selectPaType(type) {
+            paSelectedType = type;
+            document.getElementById('pa-type-income').classList.toggle('active', type === 'income');
+            document.getElementById('pa-type-expense').classList.toggle('active', type === 'expense');
+        }
+
+        function initPublicAccountTab() {
+            document.getElementById('pa-date').value = new Date().toISOString().slice(0, 10);
+            loadPublicAccount();
+        }
+
+        async function loadPublicAccount() {
+            const listEl = document.getElementById('pa-list');
+            listEl.innerHTML = '<div class="bp-loading">⏳ 載入中...</div>';
+            try {
+                const resp = await fetch(`${WORKER_URL}/public-account`);
+                const data = await resp.json();
+                if (data.success) {
+                    renderPublicAccount(data.records);
+                } else {
+                    listEl.innerHTML = `<div class="bp-empty">❌ 載入失敗：${data.error}</div>`;
+                }
+            } catch (err) {
+                listEl.innerHTML = '<div class="bp-empty">❌ 無法連接後端，請確認 Worker 已部署</div>';
+            }
+        }
+
+        async function addPublicAccountRecord() {
+            const description = document.getElementById('pa-description').value.trim();
+            const amount = document.getElementById('pa-amount').value.trim();
+            const date = document.getElementById('pa-date').value;
+            const note = document.getElementById('pa-note').value.trim();
+
+            if (!description) { alert('請填入名目！'); return; }
+            if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) { alert('請填入正確金額！'); return; }
+
+            const btn = document.getElementById('pa-add-btn');
+            btn.disabled = true;
+            btn.textContent = '新增中...';
+            try {
+                const resp = await fetch(`${WORKER_URL}/public-account`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date, type: paSelectedType, description, amount: Number(amount), note }),
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    document.getElementById('pa-description').value = '';
+                    document.getElementById('pa-amount').value = '';
+                    document.getElementById('pa-note').value = '';
+                    loadPublicAccount();
+                } else {
+                    alert('新增失敗：' + data.error);
+                }
+            } catch (err) {
+                alert('無法連接後端');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '新增記錄';
+            }
+        }
+
+        async function deletePublicAccountRecord(id) {
+            if (!confirm('確定要刪除這筆記錄？')) return;
+            try {
+                const resp = await fetch(`${WORKER_URL}/public-account/${id}`, { method: 'DELETE' });
+                const data = await resp.json();
+                if (data.success) {
+                    loadPublicAccount();
+                } else {
+                    alert('刪除失敗：' + data.error);
+                }
+            } catch (err) {
+                alert('無法連接後端');
+            }
+        }
+
+        function renderPublicAccount(records) {
+            const listEl = document.getElementById('pa-list');
+            const balanceEl = document.getElementById('pa-balance-amount');
+            const balanceWrap = document.getElementById('pa-balance-card');
+
+            if (!records || records.length === 0) {
+                balanceEl.textContent = '$0';
+                balanceWrap.classList.remove('negative');
+                listEl.innerHTML = '<div class="bp-empty">📭 還沒有任何記錄，新增第一筆吧！</div>';
+                return;
+            }
+
+            // 依日期排序（舊→新）計算累計餘額，再倒序顯示（新→舊）
+            const sorted = [...records].sort((a, b) => {
+                const d = a.date.localeCompare(b.date);
+                return d !== 0 ? d : (a.createdAt || '').localeCompare(b.createdAt || '');
+            });
+            let running = 0;
+            const withBalance = sorted.map(r => {
+                running += r.type === 'income' ? r.amount : -r.amount;
+                return { ...r, runningBalance: running };
+            });
+
+            balanceEl.textContent = `$${running.toLocaleString()}`;
+            balanceWrap.classList.toggle('negative', running < 0);
+
+            const listDiv = document.createElement('div');
+            listDiv.className = 'pa-list';
+            [...withBalance].reverse().forEach(r => {
+                const isIncome = r.type === 'income';
+                const item = document.createElement('div');
+                item.className = `pa-record${isIncome ? '' : ' expense'}`;
+                item.innerHTML = `
+                    <div class="pa-record-info">
+                        <div class="pa-record-desc">${isIncome ? '💰' : '💸'} ${r.description}${r.note ? `　<span style="color:#888;font-size:13px;">${r.note}</span>` : ''}</div>
+                        <div class="pa-record-date">${r.date}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="pa-record-amount ${r.type}">${isIncome ? '+' : '-'}$${r.amount.toLocaleString()}</div>
+                        <div class="pa-record-balance">結餘 $${r.runningBalance.toLocaleString()}</div>
+                    </div>
+                    <button class="bp-delete-btn" onclick="deletePublicAccountRecord('${r.id}')">🗑</button>
+                `;
+                listDiv.appendChild(item);
+            });
+            listEl.innerHTML = '';
+            listEl.appendChild(listDiv);
+        }
+        // === 公帳紀錄結束 ===
+
         // 分頁切換
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -2958,6 +3245,9 @@
                 // 延遲一下確保 DOM 已顯示
                 setTimeout(() => initSplitCalcTab(), 50);
             }
+            if (tabName === 'publicaccount') {
+                loadPublicAccount();
+            }
         }
 
         // 頁面載入完成後初始化
@@ -2968,6 +3258,7 @@
             initTacticalBoard();
             initScoreboard();
             initBallPurchase();
+            initPublicAccountTab();
             updateSplitCalc(); // 預先渲染計算結果
             restoreGeneratorState(); // 還原當日通知產生器狀態
         });
