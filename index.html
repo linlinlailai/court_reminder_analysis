@@ -1808,6 +1808,49 @@
                 }
             });
             document.getElementById("output").value = message.trim();
+            saveGeneratorState();
+        }
+
+        // === 通知產生器自動儲存（當日） ===
+        const GEN_KEY = 'badminton_generator';
+        function saveGeneratorState() {
+            const today = new Date().toISOString().slice(0, 10);
+            const state = {
+                date: today,
+                selectedTime,
+                assignments: JSON.parse(JSON.stringify(assignments)),
+                playerStatus: JSON.parse(JSON.stringify(playerStatus)),
+                output: document.getElementById('output').value
+            };
+            localStorage.setItem(GEN_KEY, JSON.stringify(state));
+        }
+        function clearGeneratorState() {
+            localStorage.removeItem(GEN_KEY);
+        }
+        function restoreGeneratorState() {
+            const today = new Date().toISOString().slice(0, 10);
+            try {
+                const state = JSON.parse(localStorage.getItem(GEN_KEY));
+                if (!state || state.date !== today) return; // 非當日，不還原
+
+                // 還原變數
+                selectedTime = state.selectedTime;
+                Object.assign(assignments, state.assignments);
+                Object.assign(playerStatus, state.playerStatus);
+
+                // 還原時間按鈕選取狀態
+                if (selectedTime) {
+                    document.querySelectorAll('.time-buttons button').forEach(b => {
+                        if (b.textContent === selectedTime) b.classList.add('active');
+                    });
+                }
+
+                // 還原人員按鈕選取狀態
+                updatePlayerButtons();
+
+                // 還原輸出文字
+                document.getElementById('output').value = state.output || '';
+            } catch (e) { /* 解析失敗就靜默跳過 */ }
         }
 
         // 複製到剪貼簿
@@ -1850,6 +1893,7 @@
             updatePlayerButtons();
             document.querySelectorAll(".time-buttons button").forEach(b => b.classList.remove("active"));
             document.getElementById("output").value = "";
+            clearGeneratorState();
             showSuccessMessage("已清空所有選擇");
         }
 
@@ -2906,6 +2950,7 @@
             initScoreboard();
             initBallPurchase();
             updateSplitCalc(); // 預先渲染計算結果
+            restoreGeneratorState(); // 還原當日通知產生器狀態
         });
 
         // 視窗大小改變時重新調整圓點位置
