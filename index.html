@@ -2609,7 +2609,13 @@
 
         // 初始化分級量表分頁
         async function initSplitCalcTab() {
-            // 從後端讀取分級資料
+            // 從後端讀取分級資料和付款狀態
+            await Promise.all([loadTierData(), loadPaymentStatus()]);
+            renderTiers();
+            updateSplitCalcCounts();
+        }
+
+        async function loadTierData() {
             try {
                 const resp = await fetch(`${WORKER_URL}/frequency-tiers`);
                 const data = await resp.json();
@@ -2632,8 +2638,6 @@
             } catch {
                 tierData.unassigned = players.map(p => p.label);
             }
-            renderTiers();
-            updateSplitCalcCounts();
         }
 
         function renderTiers() {
@@ -2814,11 +2818,26 @@
         const TIER_LABELS = { S:'🔴 S 級', A:'🟠 A 級', B:'🟡 B 級', C:'🟢 C 級' };
         const TIER_DESCS = { S:'100次以上', A:'50～100次', B:'20～50次', C:'20次以下' };
 
-        // 付款狀態：從 localStorage 載入，{ '姓名': true/false }，true = 已付
-        const PAYMENT_KEY = 'badminton_paymentStatus';
-        const paymentStatus = JSON.parse(localStorage.getItem(PAYMENT_KEY) || '{}');
-        function savePaymentStatus() {
-            localStorage.setItem(PAYMENT_KEY, JSON.stringify(paymentStatus));
+        // 付款狀態：從後端載入，{ '姓名': true/false }，true = 已付
+        const paymentStatus = {};
+        async function loadPaymentStatus() {
+            try {
+                const resp = await fetch(`${WORKER_URL}/payment-status`);
+                const data = await resp.json();
+                if (data.success) {
+                    Object.keys(paymentStatus).forEach(k => delete paymentStatus[k]);
+                    Object.assign(paymentStatus, data.status);
+                }
+            } catch { /* 後端不可用就保持in-memory狀態 */ }
+        }
+        async function savePaymentStatus() {
+            try {
+                await fetch(`${WORKER_URL}/payment-status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(paymentStatus)
+                });
+            } catch { /* 後端不可用，靜默武視 */ }
         }
 
         function syncWeight(tier) {

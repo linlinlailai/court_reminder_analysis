@@ -67,7 +67,11 @@ export default {
             if (url.pathname === '/frequency-tiers' && request.method === 'GET') return await getFrequencyTiers(env, origin);
             if (url.pathname === '/frequency-tiers' && request.method === 'POST') return await saveFrequencyTiers(env, await request.json(), origin);
 
-            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id', 'GET /frequency-tiers', 'POST /frequency-tiers'] }, origin);
+            // === 付款狀態 API ===
+            if (url.pathname === '/payment-status' && request.method === 'GET') return await getPaymentStatus(env, origin);
+            if (url.pathname === '/payment-status' && request.method === 'POST') return await savePaymentStatus(env, await request.json(), origin);
+
+            return jsonResp({ message: 'API ready', endpoints: ['GET /captcha', 'POST /login', 'GET /test', 'GET /ball-purchases', 'POST /ball-purchases', 'DELETE /ball-purchases/:id', 'GET /frequency-tiers', 'POST /frequency-tiers', 'GET /payment-status', 'POST /payment-status'] }, origin);
         } catch (error) {
             return jsonResp({ success: false, error: error.message, stack: error.stack }, origin, 500);
         }
@@ -328,5 +332,23 @@ async function saveFrequencyTiers(env, body, origin) {
         return jsonResp({ success: false, error: '格式錯誤' }, origin, 400);
     }
     await env.BALL_KV.put(TIER_KV_KEY, JSON.stringify(body));
+    return jsonResp({ success: true }, origin);
+}
+
+// === 付款狀態 API 處理函數 ===
+const PAYMENT_KV_KEY = 'payment_status';
+
+async function getPaymentStatus(env, origin) {
+    const raw = await env.BALL_KV.get(PAYMENT_KV_KEY);
+    const status = raw ? JSON.parse(raw) : {};
+    return jsonResp({ success: true, status }, origin);
+}
+
+async function savePaymentStatus(env, body, origin) {
+    // body 格式：{ '姓名': true/false, ... }
+    if (!body || typeof body !== 'object') {
+        return jsonResp({ success: false, error: '格式錯誤' }, origin, 400);
+    }
+    await env.BALL_KV.put(PAYMENT_KV_KEY, JSON.stringify(body));
     return jsonResp({ success: true }, origin);
 }
