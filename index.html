@@ -1293,8 +1293,29 @@
             padding: 8px 0 2px;
         }
         .split-name-chip {
-            font-size: 12px; padding: 3px 10px;
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 12px; padding: 3px 8px 3px 6px;
             border-radius: 12px; background: #eef0ff; color: #667eea;
+            cursor: pointer; user-select: none;
+            border: 1.5px solid transparent;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .split-name-chip:hover { border-color: #667eea; }
+        .split-name-chip.paid {
+            background: #e8f5e9; color: #388e3c;
+            border-color: #81c784;
+            text-decoration: line-through;
+            opacity: 0.75;
+        }
+        .split-name-chip .pay-badge {
+            font-size: 10px; padding: 1px 5px;
+            border-radius: 8px; font-weight: bold;
+            background: #dde3ff; color: #5c6bc0;
+            white-space: nowrap; flex-shrink: 0;
+            transition: background 0.2s, color 0.2s;
+        }
+        .split-name-chip.paid .pay-badge {
+            background: #c8e6c9; color: #2e7d32;
         }
         .split-total-check {
             margin-top: 14px; padding-top: 12px;
@@ -1557,10 +1578,9 @@
                     </div>
                 </div>
 
-                <!-- 儲存按鈕 -->
+                <!-- 自動儲存提示 -->
                 <div class="tier-save-row">
-                    <button class="tier-save-btn" onclick="saveTiers()">💾 儲存分級</button>
-                    <span class="tier-save-msg" id="tier-save-msg">✅ 已儲存！</span>
+                    <span class="tier-save-msg" id="tier-save-msg"></span>
                 </div>
 
                 <hr style="border:none;border-top:2px solid #eee;margin:0;">
@@ -2641,6 +2661,7 @@
             tierData.unassigned.push(name);
             renderTiers();
             updateSplitCalcCounts();
+            saveTiers(true); // 自動儲存（靜默模式）
         }
 
         // Drag-over / Drop 處理
@@ -2665,6 +2686,7 @@
             tierDragSource = null;
             renderTiers();
             updateSplitCalcCounts();
+            saveTiers(true); // 自動儲存（靜默模式）
         }
 
         // 觸控拖曳（手機支援）
@@ -2712,7 +2734,8 @@
         }
 
         // 儲存分級到後端
-        async function saveTiers() {
+        // silent=true 時不顯示成功 toast（拖曳自動儲存用）
+        async function saveTiers(silent = false) {
             try {
                 const resp = await fetch(`${WORKER_URL}/frequency-tiers`, {
                     method: 'POST',
@@ -2721,15 +2744,22 @@
                 });
                 const data = await resp.json();
                 const msg = document.getElementById('tier-save-msg');
-                if (data.success) {
-                    msg.textContent = '✅ 已儲存！';
-                } else {
-                    msg.textContent = '❌ 儲存失敗';
+                if (!silent) {
+                    if (data.success) {
+                        msg.textContent = '✅ 已儲存！';
+                    } else {
+                        msg.textContent = '❌ 儲存失敗';
+                    }
+                    msg.classList.add('show');
+                    setTimeout(() => msg.classList.remove('show'), 2500);
+                } else if (data.success) {
+                    // 靜默模式：只顯示短暫小提示
+                    msg.textContent = '✅ 已自動儲存';
+                    msg.classList.add('show');
+                    setTimeout(() => msg.classList.remove('show'), 1200);
                 }
-                msg.classList.add('show');
-                setTimeout(() => msg.classList.remove('show'), 2500);
             } catch {
-                alert('無法連接後端，請確認 Worker 已更新！');
+                if (!silent) alert('無法連接後端，請確認 Worker 已更新！');
             }
         }
 
@@ -2739,6 +2769,13 @@
         const TIERS = ['S','A','B','C'];
         const TIER_LABELS = { S:'🔴 S 級', A:'🟠 A 級', B:'🟡 B 級', C:'🟢 C 級' };
         const TIER_DESCS = { S:'100次以上', A:'50～100次', B:'20～50次', C:'20次以下' };
+
+        // 付款狀態：從 localStorage 載入，{ '姓名': true/false }，true = 已付
+        const PAYMENT_KEY = 'badminton_paymentStatus';
+        const paymentStatus = JSON.parse(localStorage.getItem(PAYMENT_KEY) || '{}');
+        function savePaymentStatus() {
+            localStorage.setItem(PAYMENT_KEY, JSON.stringify(paymentStatus));
+        }
 
         function syncWeight(tier) {
             const val = document.getElementById('weight-' + tier).value;
@@ -2799,7 +2836,7 @@
                     <div class="split-per-person">${cnt > 0 && totalShares > 0 ? '$' + Math.round(perPerson).toLocaleString() : '—'}</div>
                     ${names.length > 0 ? `<button class="split-detail-toggle" onclick="toggleSplitNames('${tier}')" id="toggle-details-${tier}">名單 ▼</button>` : ''}
                     <div class="split-name-list" id="split-names-${tier}">
-                        <div class="split-name-list-inner">${names.map(n => `<span class="split-name-chip">${n}</span>`).join('')}</div>
+                        <div class="split-name-list-inner">${names.map(n => `<span class="split-name-chip${paymentStatus[n] ? ' paid' : ''}" onclick="togglePayment('${n}', '${tier}')" title="點擊標記付款狀態">${n}<span class="pay-badge">${paymentStatus[n] ? '✓ 已付' : '未付'}</span></span>`).join('')}</div>
                     </div>`;
                 resultsEl.appendChild(row);
             });
@@ -2819,6 +2856,27 @@
             const btn = document.getElementById('toggle-details-' + tier);
             el.classList.toggle('open');
             btn.textContent = el.classList.contains('open') ? '名單 ▲' : '名單 ▼';
+        }
+
+        function togglePayment(name, tier) {
+            paymentStatus[name] = !paymentStatus[name];
+            savePaymentStatus(); // 儲存到 localStorage
+            // 更新這個 tier 的名單 chips（不重算整個結果，只更新 DOM）
+            const listInner = document.querySelector(`#split-names-${tier} .split-name-list-inner`);
+            if (!listInner) return;
+            const chips = listInner.querySelectorAll('.split-name-chip');
+            chips.forEach(chip => {
+                const chipName = chip.childNodes[0].textContent;
+                if (chipName === name) {
+                    if (paymentStatus[name]) {
+                        chip.classList.add('paid');
+                        chip.querySelector('.pay-badge').textContent = '✓ 已付';
+                    } else {
+                        chip.classList.remove('paid');
+                        chip.querySelector('.pay-badge').textContent = '未付';
+                    }
+                }
+            });
         }
 
         // === 分帳計算結束 ===
